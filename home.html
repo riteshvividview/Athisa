@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Athisa Health — Curated Mental Wellness Rooted in Care</title>
+<meta name="description" content="Athisa Health offers personalized mental health support through a team of licensed professionals — individual therapy, couples therapy, psychiatry, and more.">
+<link rel="icon" href="assets/AthisaLogo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ Design tokens ============ */
+  :root {
+    --color-cream: #FDF1EE;
+    --color-primary: #885784;
+    --color-deep-purple: #602B7A;
+    --color-white: #FFFFFF;
+    --color-ink: #222941;
+    --color-slate: #5C6378;
+    --color-border: #E8DED1;
+    --color-muted: #878BAE54;
+
+    --font-heading: 'Roboto Slab', Georgia, serif;
+    --font-body: 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --radius-pill: 9999px;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+
+    --shadow-card: 0px 4px 3px rgba(0,0,0,0.1), 0px 2px 2px rgba(0,0,0,0.1);
+    --shadow-soft: 0px 4px 20px -10px rgba(0,0,0,0.08);
+
+    --container-max: 1280px;
+    --gutter: clamp(20px, 6vw, 96px);
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --dur-md: 0.6s;
+  }
+
+  /* ============ Reset ============ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: auto; overflow-x: hidden; width: 100%; }
+  body, h1, h2, h3, h4, p, ul, figure { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+  svg { display: block; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-slate);
+    background: var(--color-white);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--color-ink); font-weight: 400; }
+
+  .container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    min-width: 0;
+  }
+
+  /* Prevent CSS Grid/Flexbox "blowout": tracks and flex items default to an
+     automatic minimum size equal to their content's min-content width, which
+     can force a track (and everything sharing its row) wider than the
+     viewport. Resetting min-width: 0 lets text wrap normally instead. */
+  .hero__grid, .hero__grid > *,
+  .interlude__grid, .interlude__grid > *,
+  .features, .features > *,
+  .services__grid, .services__grid > *,
+  .team-grid, .team-grid > *,
+  .privacy-grid, .privacy-grid > *,
+  .steps, .steps > *,
+  .testi-track, .testi-track > *,
+  .footer-grid, .footer-grid > *,
+  .hero__content, .hero__actions, .hero__badges, .hero__visual {
+    min-width: 0;
+  }
+
+  /* Focus visibility */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--color-deep-purple);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--color-white);
+    color: var(--color-primary);
+    padding: 12px 20px;
+    z-index: 2000;
+    border-radius: 0 0 8px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ============ Eyebrow / kicker ============ */
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    display: block;
+    margin-bottom: 16px;
+  }
+  .eyebrow--deep { color: var(--color-deep-purple); }
+
+  /* Section heading sizes (fluid, matched to Figma desktop values) */
+  .h-72 { font-size: clamp(2.2rem, 1.2rem + 4.4vw, 4.5rem); line-height: 1.05; font-weight: 400; }
+  .h-48 { font-size: clamp(1.8rem, 1.2rem + 2.6vw, 3rem); line-height: 1.15; font-weight: 400; }
+  .h-40 { font-size: clamp(1.6rem, 1.1rem + 2.1vw, 2.5rem); line-height: 1.15; font-weight: 600; }
+  .h-36 { font-size: clamp(1.5rem, 1.1rem + 1.7vw, 2.25rem); line-height: 1.2; font-weight: 400; }
+  .h-30 { font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.875rem); line-height: 1.2; font-weight: 400; }
+
+  .lede { font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem); line-height: 1.6; color: var(--color-slate); }
+
+  /* ============ Buttons ============ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 15px 32px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    white-space: nowrap;
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), background-color 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
+  .btn-primary .btn-icon {
+    background: var(--color-white);
+    border-radius: var(--radius-pill);
+    padding: 4px;
+    display: inline-flex;
+  }
+  .btn-primary:hover { background: var(--color-deep-purple); transform: translateY(-2px); box-shadow: 0 12px 24px -12px rgba(96,43,122,0.45); }
+  .btn-outline {
+    background: var(--color-white);
+    color: var(--color-deep-purple);
+    border: 1px solid var(--color-deep-purple);
+  }
+  .btn-outline:hover { background: var(--color-deep-purple); color: var(--color-white); transform: translateY(-2px); }
+
+  /* ============ Header / Nav (self-contained, matches existing navbar component) ============ */
+  .navbar, .navbar *, .mobile-menu, .mobile-menu * { box-sizing: border-box; }
+  .navbar, .mobile-menu { font-family: var(--font-body); }
+
+  .site-header { position: absolute; inset-inline: 0; top: 0; z-index: 1100; }
+
+  .navbar {
+    position: relative;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    padding: 20px var(--gutter);
+    width: 100%;
+  }
+
+  .navbar__logo { display: flex; align-items: center; flex-shrink: 0; }
+  .navbar__logo a { display: flex; align-items: center; }
+  .navbar__logo img { height: 44px; width: auto; }
+
+  .navbar__links { display: none; list-style: none; align-items: center; gap: 32px; }
+  .navbar__links a {
+    position: relative;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--color-primary);
+    padding-bottom: 4px;
+    transition: opacity 0.2s ease;
+  }
+  .navbar__links a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0; height: 2px;
+    background: var(--color-deep-purple);
+    border-radius: 2px;
+    transition: width 0.25s ease;
+  }
+  .navbar__links a:hover, .navbar__links a:focus-visible { opacity: 0.85; }
+  .navbar__links a:hover::after, .navbar__links a:focus-visible::after,
+  .navbar__links a[aria-current="page"]::after { width: 100%; }
+
+  .navbar__toggle {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    transition: background-color 0.25s ease;
+  }
+  .navbar__toggle.is-active { background-color: rgba(136,87,132,0.12); }
+  .navbar__toggle span {
+    display: block; width: 18px; height: 2px;
+    background: var(--color-primary);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .navbar__toggle.is-active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .navbar__toggle.is-active span:nth-child(2) { opacity: 0; }
+  .navbar__toggle.is-active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed; inset: 0; width: 100%; height: 100vh;
+    background: var(--color-cream);
+    overflow: hidden;
+    transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(0.65,0,0.35,1);
+    z-index: 1050;
+    padding: 110px 32px 32px;
+  }
+  .mobile-menu.is-open { transform: translateY(0); }
+  .mobile-menu::before, .mobile-menu::after {
+    content: ''; position: absolute; border-radius: 50%;
+    filter: blur(60px); pointer-events: none; z-index: 0;
+  }
+  .mobile-menu::before { width: 260px; height: 260px; background: var(--color-muted); top: -80px; right: -80px; }
+  .mobile-menu::after { width: 220px; height: 220px; background: rgba(136,87,132,0.25); bottom: -60px; left: -60px; }
+  .mobile-menu__brandmark {
+    position: absolute; bottom: 40px; right: -20px; width: 220px;
+    opacity: 0.08; pointer-events: none; z-index: 0;
+  }
+  .mobile-menu__links { position: relative; display: flex; flex-direction: column; gap: 26px; z-index: 1; }
+  .mobile-menu__links li { opacity: 0; transform: translateY(14px); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .mobile-menu.is-open .mobile-menu__links li { opacity: 1; transform: translateY(0); }
+  .mobile-menu.is-open .mobile-menu__links li:nth-child(1) { transition-delay: .12s; }
+  .mobile-menu.is-open .mobile-menu__links li:nth-child(2) { transition-delay: .18s; }
+  .mobile-menu.is-open .mobile-menu__links li:nth-child(3) { transition-delay: .24s; }
+  .mobile-menu.is-open .mobile-menu__links li:nth-child(4) { transition-delay: .3s; }
+  .mobile-menu.is-open .mobile-menu__links li:nth-child(5) { transition-delay: .36s; }
+  .mobile-menu__links a {
+    position: relative; display: inline-block; font-size: 20px; font-weight: 500;
+    color: var(--color-primary); transition: color 0.2s ease, transform 0.2s ease;
+  }
+  .mobile-menu__links a::after {
+    content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px;
+    background: var(--color-deep-purple); border-radius: 2px; transition: width 0.25s ease;
+  }
+  .mobile-menu__links a:hover, .mobile-menu__links a:focus-visible { color: var(--color-deep-purple); transform: translateX(4px); }
+  .mobile-menu__links a:hover::after, .mobile-menu__links a:focus-visible::after { width: 100%; }
+
+  @media (min-width: 960px) {
+    .navbar__links { display: flex; }
+    .navbar__toggle { display: none; }
+  }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative;
+    background: var(--color-cream);
+    padding-top: 130px;
+    padding-bottom: 96px;
+    overflow: clip;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .hero__content { position: relative; z-index: 2; max-width: 660px; }
+
+  .hero__heading { color: var(--color-primary); margin-bottom: 24px; }
+
+  .hero__kicker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .hero__kicker svg { flex-shrink: 0; }
+  .hero__kicker span {
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .hero__sub { font-size: 18px; line-height: 1.55; color: var(--color-slate); margin-bottom: 16px; }
+  .hero__body { font-size: 18px; line-height: 1.55; color: var(--color-slate); margin-bottom: 32px; max-width: 512px; }
+
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 40px; }
+
+  .hero__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(136,87,132,0.15);
+  }
+  .hero__badge { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--color-ink); }
+  .hero__badge img { width: 22px; height: 22px; object-fit: contain; }
+
+  .hero__visual {
+    position: relative;
+    z-index: 1;
+    justify-self: center;
+    width: min(100%, 480px);
+  }
+  .hero__visual img {
+    width: 100%;
+    height: auto;
+    will-change: transform;
+  }
+
+  .hero__wave {
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    line-height: 0;
+    z-index: 0;
+  }
+  .hero__wave img { width: 100%; height: auto; }
+
+  @media (min-width: 860px) {
+    .hero { padding-top: 150px; padding-bottom: 130px; }
+    .hero__grid { grid-template-columns: 1.15fr 1fr; gap: 32px; }
+    .hero__visual { justify-self: end; width: 100%; max-width: 560px; }
+  }
+
+  /* ============ Space-to-be + Approach ============ */
+  .interlude {
+    position: relative;
+    background: linear-gradient(180deg, #fffaf8 0%, #ffffff 55%, #ffffff 100%);
+    padding-block: clamp(56px, 8vw, 96px);
+    overflow: clip;
+  }
+  .interlude::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    width: min(900px, 140%);
+    aspect-ratio: 1 / 0.95;
+    background: radial-gradient(closest-side, rgba(136,87,132,0.16), rgba(136,87,132,0) 72%);
+    transform: translateX(-50%);
+    filter: blur(4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .interlude__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(40px, 6vw, 64px);
+    align-items: start;
+  }
+
+  .space-block { text-align: center; }
+  .space-block__heading { font-weight: 600; margin-bottom: 20px; }
+  .space-block__heading em { font-style: normal; color: var(--color-primary); display: block; }
+  .space-block__rule {
+    width: 96px; height: 4px;
+    background: var(--color-primary);
+    border-radius: 4px;
+    margin: 0 auto 32px;
+  }
+  .space-block__graphic { max-width: 260px; margin-inline: auto; opacity: 0.9; }
+
+  .approach-block__intro { max-width: 480px; margin-bottom: 40px; }
+  .approach-block .lede { margin-top: 20px; }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 24px;
+  }
+  .feature { text-align: center; }
+  .feature__icon {
+    width: 48px; height: 48px;
+    margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .feature__icon img { width: 32px; height: 32px; object-fit: contain; }
+  .feature__title { font-size: 14px; font-weight: 600; color: var(--color-ink); margin-bottom: 8px; font-family: var(--font-body); }
+  .feature__text { font-size: 12px; line-height: 1.5; color: var(--color-slate); }
+
+  @media (min-width: 720px) {
+    .features { grid-template-columns: repeat(4, 1fr); }
+    .feature:nth-child(3) { border-left: 1px solid var(--color-border); padding-left: 16px; }
+  }
+  @media (min-width: 960px) {
+    .interlude__grid { grid-template-columns: 0.9fr 1.1fr; text-align: left; }
+    .space-block { text-align: left; }
+    .space-block__rule { margin: 0 0 32px; }
+    .space-block__graphic { margin-inline: 0; }
+  }
+
+  /* ============ Services ============ */
+  .services {
+    position: relative;
+    background: var(--color-cream);
+    padding-block: clamp(64px, 8vw, 112px);
+  }
+  .services__banner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 32px;
+    padding: 10px 28px;
+    border-radius: var(--radius-pill);
+    background: var(--color-white);
+    box-shadow: var(--shadow-soft);
+  }
+  .services__banner span {
+    font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--color-deep-purple);
+  }
+  .services__head { text-align: center; max-width: 760px; margin: 0 auto 48px; }
+
+  .services__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 700px) { .services__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1080px) { .services__grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .service-card {
+    background: var(--color-white);
+    border: 1px solid rgba(136,87,132,0.1);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  }
+  .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 32px -18px rgba(96,43,122,0.28); }
+
+  .service-card__icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+  }
+  .service-card__icon img { width: 32px; height: 32px; }
+  .service-card__title { font-size: 22px; font-weight: 500; margin-bottom: 12px; }
+  .service-card__text { font-size: 16px; line-height: 1.6; color: var(--color-slate); margin-bottom: 20px; }
+  .service-card__list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; flex-grow: 1; }
+  .service-card__list li { display: flex; align-items: baseline; gap: 8px; font-size: 14px; color: var(--color-slate); }
+  .service-card__list li::before { content: '✓'; color: var(--color-primary); font-size: 14px; line-height: 1; }
+  .service-card__link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 500; color: var(--color-primary);
+    margin-top: auto;
+    transition: gap 0.25s ease;
+  }
+  .service-card__link img { width: 16px; height: 16px; transition: transform 0.25s ease; }
+  .service-card:hover .service-card__link img { transform: translateX(4px); }
+
+  /* ============ Section shell (Team / Privacy / How-it-works) ============ */
+  .section { padding-block: clamp(56px, 8vw, 80px); }
+  .section--cream { background: var(--color-cream); }
+  .section--white { background: var(--color-white); }
+  .section__head { text-align: center; max-width: 780px; margin: 0 auto clamp(32px, 5vw, 64px); }
+
+  /* ============ Team ============ */
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+  @media (min-width: 780px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
+  .team-card {
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    padding: 32px;
+    text-align: center;
+  }
+  .team-card__icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: rgba(136,87,132,0.1);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .team-card__icon img { width: 32px; height: 32px; }
+  .team-card__title { font-size: 18px; font-weight: 600; }
+  .team-note { text-align: center; max-width: 760px; margin: 40px auto 0; font-size: 16px; }
+
+  /* ============ Privacy ============ */
+  .privacy-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  .privacy-copy { max-width: 584px; }
+  .privacy-copy .lede { margin-top: 24px; }
+  .privacy-card {
+    background: var(--color-cream);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .privacy-item { display: flex; align-items: flex-start; gap: 16px; }
+  .privacy-item__icon {
+    width: 48px; height: 48px; flex-shrink: 0;
+    background: var(--color-white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .privacy-item__icon img { width: 24px; height: 24px; }
+  .privacy-item p { font-size: 18px; color: var(--color-slate); padding-top: 10px; }
+
+  @media (min-width: 960px) { .privacy-grid { grid-template-columns: 1fr 1fr; } }
+
+  /* ============ How it works ============ */
+  .steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 640px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1080px) { .steps { grid-template-columns: repeat(4, 1fr); } }
+
+  .step {
+    position: relative;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    padding: 32px;
+  }
+  .step__num {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-white);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  .step__title { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
+  .step__text { font-size: 16px; line-height: 1.5; color: var(--color-slate); }
+  .step__connector {
+    display: none;
+    position: absolute;
+    right: -20px; top: 50%;
+    transform: translateY(-50%);
+    width: 32px; height: 32px;
+    z-index: 2;
+  }
+  @media (min-width: 1080px) {
+    .step:not(:last-child) .step__connector { display: block; }
+  }
+
+  /* ============ Testimonials ============ */
+  .testimonials { background: var(--color-cream); }
+  .testimonials__head { text-align: center; max-width: 600px; margin: 0 auto 40px; }
+
+  .testi-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 8px;
+  }
+  .testi-track::-webkit-scrollbar { display: none; }
+
+  .testi-card {
+    scroll-snap-align: start;
+    background: var(--color-white);
+    border: 1px solid rgba(232,222,209,0.5);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+    padding: 33px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .testi-card__quote { font-family: var(--font-heading); font-size: 36px; color: var(--color-deep-purple); line-height: 1; }
+  .testi-card__text { font-size: 14px; line-height: 1.6; color: var(--color-ink); flex-grow: 1; }
+  .testi-card__person { display: flex; align-items: center; gap: 12px; }
+  .testi-card__person img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+  .testi-card__name { font-size: 14px; color: var(--color-ink); }
+  .testi-card__role { font-size: 12px; color: var(--color-slate); }
+
+  .testi-dots { display: flex; justify-content: center; gap: 8px; margin-top: 32px; }
+  .testi-dots button {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-border);
+    transition: background-color 0.25s ease, transform 0.25s ease;
+  }
+  .testi-dots button[aria-current="true"] { background: var(--color-deep-purple); transform: scale(1.15); }
+
+  @media (min-width: 960px) {
+    .testi-track { grid-auto-flow: row; grid-auto-columns: unset; grid-template-columns: repeat(3, 1fr); overflow: visible; }
+    .testi-dots { display: none; }
+  }
+
+  /* ============ Footer ============ */
+  .site-footer { background: var(--color-white); border-top: 1px solid var(--color-border); padding-top: clamp(48px, 7vw, 80px); }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding-bottom: 48px;
+  }
+  .footer-brand__logo { height: 74px; width: auto; margin-bottom: 16px; }
+  .footer-brand p { font-size: 14px; color: var(--color-slate); max-width: 320px; margin-bottom: 20px; }
+  .footer-social { display: flex; gap: 12px; }
+  .footer-social a {
+    width: 32px; height: 32px;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--color-ink);
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
+  .footer-social a:hover { background: var(--color-primary); color: var(--color-white); transform: translateY(-2px); }
+  .footer-social svg { width: 15px; height: 15px; }
+
+  .footer-heading { font-family: var(--font-body); font-size: 14px; color: var(--color-ink); font-weight: 500; margin-bottom: 16px; }
+  .footer-links { display: flex; flex-direction: column; gap: 8px; }
+  .footer-links a { font-size: 14px; color: var(--color-slate); transition: color 0.2s ease; }
+  .footer-links a:hover { color: var(--color-primary); }
+
+  .footer-contact { display: flex; flex-direction: column; gap: 12px; }
+  .footer-contact li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--color-slate); }
+  .footer-contact img { width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; }
+
+  .footer-bottom {
+    border-top: 1px solid var(--color-border);
+    padding-block: 24px;
+    font-size: 12px;
+    color: var(--color-slate);
+  }
+
+  @media (min-width: 720px) { .footer-grid { grid-template-columns: 1.2fr 1fr 1fr; } }
+
+  /* ============ Scroll reveal ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    transition-delay: var(--reveal-delay, 0s);
+  }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .reveal-stagger.is-visible > * { opacity: 1; transform: translateY(0); }
+  .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0.02s; }
+  .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 0.09s; }
+  .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 0.16s; }
+  .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 0.23s; }
+  .reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 0.30s; }
+  .reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 0.37s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-stagger > * { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <nav class="navbar" aria-label="Primary">
+    <ul class="navbar__links">
+      <li><a href="home.html" aria-current="page">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+    </ul>
+
+    <div class="navbar__logo">
+      <a href="home.html" aria-label="Athisa Health home">
+        <img src="assets/AthisaLogo.svg" alt="Athisa Health">
+      </a>
+    </div>
+
+    <button class="navbar__toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <img class="mobile-menu__brandmark" src="assets/AthisaLogo.svg" alt="" aria-hidden="true">
+    <ul class="mobile-menu__links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="home">
+    <div class="container hero__grid">
+      <div class="hero__content">
+        <h1 class="h-72 hero__heading">Curated Mental Wellness Rooted in Care</h1>
+
+        <div class="hero__kicker">
+          <svg width="18" height="21" viewBox="0 0 18 21" fill="none" aria-hidden="true">
+            <path d="M9 1c3 2 5 5 5 8a5 5 0 1 1-10 0c0-3 2-6 5-8Z" stroke="#885784" stroke-width="1.4" fill="none"/>
+          </svg>
+          <span>Healing the Whole You</span>
+        </div>
+
+        <p class="hero__sub">Where evidence-based therapy meets a deeply human approach to healing.</p>
+        <p class="hero__body">We offer personalized mental health support through a team of licensed professionals — designed to help you feel understood, supported, and empowered.</p>
+
+        <div class="hero__actions">
+          <a class="btn btn-primary" href="contact.html">
+            Book a Session
+            <span class="btn-icon" aria-hidden="true">
+              <img src="assets/figma/icon-book-session-arrow.svg" alt="" width="12" height="12">
+            </span>
+          </a>
+          <a class="btn btn-outline" href="services.html">Explore Services</a>
+        </div>
+
+        <div class="hero__badges">
+          <div class="hero__badge"><img src="assets/figma/badge-inperson.png" alt=""><span>In-Person Care</span></div>
+          <div class="hero__badge"><img src="assets/figma/badge-virtual.png" alt=""><span>Virtual Therapy</span></div>
+          <div class="hero__badge"><img src="assets/figma/badge-holistic.png" alt=""><span>Holistic Healing</span></div>
+        </div>
+      </div>
+
+      <div class="hero__visual" data-parallax>
+        <img src="assets/figma/hero-photo-blob.png" alt="Woman relaxing on a plant-filled balcony with a cup of tea, representing calm and healing" width="900" height="855" loading="eager">
+      </div>
+    </div>
+
+    <div class="hero__wave" aria-hidden="true">
+      <img src="assets/figma/hero-wave-bottom.svg" alt="">
+    </div>
+  </section>
+
+  <!-- ============ SPACE TO BE + APPROACH ============ -->
+  <section class="interlude">
+    <div class="container interlude__grid">
+      <div class="space-block reveal">
+        <h2 class="h-40 space-block__heading">A Space to Be.<em>A Place to Heal.</em></h2>
+        <div class="space-block__rule" aria-hidden="true"></div>
+        <img class="space-block__graphic" src="assets/figma/chaos-to-calm-graphic.png" alt="Illustration of a tangled line unwinding into a calm spiral, symbolizing the journey from chaos to clarity" loading="lazy">
+      </div>
+
+      <div class="approach-block">
+        <div class="approach-block__intro reveal">
+          <span class="eyebrow">Our Approach</span>
+          <h2 class="h-36">Healing That Goes Beyond Symptoms</h2>
+          <p class="lede">We take a comprehensive and integrative approach to wellness, focusing on long-term healing, emotional resilience, and physical restoration.</p>
+        </div>
+
+        <div class="features reveal-stagger">
+          <div class="feature">
+            <div class="feature__icon"><img src="assets/figma/icon-approach-mindbody.png" alt=""></div>
+            <h3 class="feature__title">Mind-Body Connection</h3>
+            <p class="feature__text">We address both emotional and physical wellbeing together.</p>
+          </div>
+          <div class="feature">
+            <div class="feature__icon"><img src="assets/figma/icon-approach-evidence.png" alt=""></div>
+            <h3 class="feature__title">Evidence-Based Methods</h3>
+            <p class="feature__text">Our therapies are backed by proven techniques and clinical expertise.</p>
+          </div>
+          <div class="feature">
+            <div class="feature__icon"><img src="assets/figma/icon-approach-emotional.png" alt=""></div>
+            <h3 class="feature__title">Emotional Support</h3>
+            <p class="feature__text">We provide a safe space to heal, grow, and build inner strength.</p>
+          </div>
+          <div class="feature">
+            <div class="feature__icon"><img src="assets/figma/icon-approach-holistic.png" alt=""></div>
+            <h3 class="feature__title">Holistic Wellness</h3>
+            <p class="feature__text">We consider your lifestyle, habits, and overall wellbeing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="services__banner reveal"><span>Our Services</span></div>
+      <div class="services__head reveal">
+        <h2 class="h-36">Support for Every Step of Your Healing Journey</h2>
+      </div>
+
+      <div class="services__grid reveal-stagger">
+
+        <article class="service-card">
+          <div class="service-card__icon" style="background: rgba(136,87,132,0.08);">
+            <img src="assets/figma/icon-service-individual.svg" alt="">
+          </div>
+          <h3 class="service-card__title">Individual Therapy</h3>
+          <p class="service-card__text">One-on-one sessions focused on anxiety, depression, stress, trauma, and personal growth.</p>
+          <ul class="service-card__list">
+            <li>Licensed therapists</li>
+            <li>Personalized treatment plans</li>
+            <li>Evidence-based approaches</li>
+          </ul>
+          <a class="service-card__link" href="services.html">Learn more <img src="assets/figma/icon-arrow-learn-more.svg" alt=""></a>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card__icon" style="background: rgba(184,125,138,0.08);">
+            <img src="assets/figma/icon-service-couples.svg" alt="">
+          </div>
+          <h3 class="service-card__title">Couples Therapy</h3>
+          <p class="service-card__text">Support for communication, conflict resolution, emotional connection, and relationship repair.</p>
+          <ul class="service-card__list">
+            <li>Relationship-focused care</li>
+            <li>Communication tools</li>
+            <li>Conflict resolution strategies</li>
+          </ul>
+          <a class="service-card__link" href="services.html">Learn more <img src="assets/figma/icon-arrow-learn-more.svg" alt=""></a>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card__icon" style="background: rgba(109,158,170,0.08);">
+            <img src="assets/figma/icon-service-clinical.svg" alt="">
+          </div>
+          <h3 class="service-card__title">Clinical Psychology Services</h3>
+          <p class="service-card__text">Psychological assessments, diagnosis, and structured treatment plans conducted by licensed clinical psychologists.</p>
+          <ul class="service-card__list">
+            <li>Comprehensive assessments</li>
+            <li>Clinical diagnosis</li>
+            <li>Treatment planning</li>
+          </ul>
+          <a class="service-card__link" href="services.html">Learn more <img src="assets/figma/icon-arrow-learn-more.svg" alt=""></a>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card__icon" style="background: rgba(139,123,150,0.08);">
+            <img src="assets/figma/icon-service-psychiatric.svg" alt="">
+          </div>
+          <h3 class="service-card__title">Psychiatric Consultation</h3>
+          <p class="service-card__text">Medication management and clinical evaluation by qualified psychiatrists, when required.</p>
+          <ul class="service-card__list">
+            <li>Medication management</li>
+            <li>Clinical evaluation</li>
+            <li>Collaborative care</li>
+          </ul>
+          <a class="service-card__link" href="services.html">Learn more <img src="assets/figma/icon-arrow-learn-more.svg" alt=""></a>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card__icon" style="background: rgba(200,155,123,0.08);">
+            <img src="assets/figma/icon-service-adolescent.svg" alt="">
+          </div>
+          <h3 class="service-card__title">Adolescent &amp; Young Adult Therapy</h3>
+          <p class="service-card__text">Support tailored for academic stress, identity development, emotional regulation, and behavioral concerns.</p>
+          <ul class="service-card__list">
+            <li>Age-appropriate care</li>
+            <li>Identity exploration</li>
+            <li>Academic stress support</li>
+          </ul>
+          <a class="service-card__link" href="services.html">Learn more <img src="assets/figma/icon-arrow-learn-more.svg" alt=""></a>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card__icon" style="background: rgba(155,123,157,0.08);">
+            <img src="assets/figma/icon-service-corporate.svg" alt="">
+          </div>
+          <h3 class="service-card__title">Corporate Wellness Programs</h3>
+          <p class="service-card__text">Mental health solutions for organizations, including workshops, employee support, and burnout management.</p>
+          <ul class="service-card__list">
+            <li>Workplace wellness</li>
+            <li>Employee support</li>
+            <li>Burnout prevention</li>
+          </ul>
+          <a class="service-card__link" href="services.html">Learn more <img src="assets/figma/icon-arrow-learn-more.svg" alt=""></a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TEAM ============ -->
+  <section class="section section--cream" id="about">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow" style="text-align:center;">Our Team</span>
+        <h2 class="h-48">Experienced and Licensed Professionals</h2>
+        <p class="lede" style="margin-top:24px;">Our team consists of experienced and licensed professionals dedicated to ethical and high-quality care.</p>
+      </div>
+
+      <div class="team-grid reveal-stagger">
+        <div class="team-card">
+          <div class="team-card__icon"><img src="assets/figma/icon-team-clinical.svg" alt=""></div>
+          <h3 class="team-card__title">Licensed / Registered Clinical Psychologists</h3>
+        </div>
+        <div class="team-card">
+          <div class="team-card__icon"><img src="assets/figma/icon-team-psychiatrist.svg" alt=""></div>
+          <h3 class="team-card__title">Qualified Psychiatrists</h3>
+        </div>
+        <div class="team-card">
+          <div class="team-card__icon"><img src="assets/figma/icon-team-counseling.svg" alt=""></div>
+          <h3 class="team-card__title">Trained Counseling Psychologists</h3>
+        </div>
+      </div>
+
+      <p class="team-note reveal">Each therapist is carefully selected and matched based on your needs to ensure the right fit.</p>
+    </div>
+  </section>
+
+  <!-- ============ PRIVACY ============ -->
+  <section class="section section--white">
+    <div class="container privacy-grid">
+      <div class="privacy-copy reveal">
+        <span class="eyebrow">Confidentiality &amp; Care</span>
+        <h2 class="h-36">Your Privacy is Our Priority</h2>
+        <p class="lede">All sessions are conducted in a secure and confidential environment, following ethical guidelines and professional standards. We maintain strict data protection practices to ensure your information remains safe.</p>
+      </div>
+
+      <div class="privacy-card reveal">
+        <div class="privacy-item">
+          <div class="privacy-item__icon"><img src="assets/figma/icon-privacy-secure.svg" alt=""></div>
+          <p>Secure and confidential sessions</p>
+        </div>
+        <div class="privacy-item">
+          <div class="privacy-item__icon"><img src="assets/figma/icon-privacy-ethics.svg" alt=""></div>
+          <p>Ethical guidelines and professional standards</p>
+        </div>
+        <div class="privacy-item">
+          <div class="privacy-item__icon"><img src="assets/figma/icon-privacy-data.svg" alt=""></div>
+          <p>Strict data protection practices</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow" style="text-align:center;">How It Works</span>
+        <h2 class="h-48">Your Journey to Better Mental Health</h2>
+      </div>
+
+      <div class="steps reveal-stagger">
+        <div class="step">
+          <div class="step__num">1</div>
+          <h3 class="step__title">Book Your Session</h3>
+          <p class="step__text">Schedule your consultation online through our simple booking process.</p>
+          <img class="step__connector" src="assets/figma/icon-step-arrow.svg" alt="" aria-hidden="true">
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <h3 class="step__title">Get Matched With a Therapist</h3>
+          <p class="step__text">We carefully connect you with the most suitable mental health professional based on your needs.</p>
+          <img class="step__connector" src="assets/figma/icon-step-arrow.svg" alt="" aria-hidden="true">
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <h3 class="step__title">Attend Sessions</h3>
+          <p class="step__text">Choose between secure virtual therapy or in-person consultations.</p>
+          <img class="step__connector" src="assets/figma/icon-step-arrow.svg" alt="" aria-hidden="true">
+        </div>
+        <div class="step">
+          <div class="step__num">4</div>
+          <h3 class="step__title">Begin Your Healing Journey</h3>
+          <p class="step__text">Receive personalized support designed to help you build resilience, clarity, and emotional well-being.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section class="section testimonials">
+    <div class="container">
+      <div class="testimonials__head reveal">
+        <span class="eyebrow" style="text-align:center;">Client Stories</span>
+        <h2 class="h-30">Real People. Real Healing.</h2>
+      </div>
+
+      <div class="testi-track reveal" id="testiTrack">
+        <article class="testi-card">
+          <p class="testi-card__quote" aria-hidden="true">&ldquo;</p>
+          <p class="testi-card__text">Athisa Health changed my life. I finally feel heard, understood, and supported in a way that helped me heal from the inside out.</p>
+          <div class="testi-card__person">
+            <img src="assets/figma/avatar-sana.png" alt="" loading="lazy">
+            <div>
+              <p class="testi-card__name">– Sana M.</p>
+              <p class="testi-card__role">Virtual Therapy Client</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="testi-card">
+          <p class="testi-card__quote" aria-hidden="true">&ldquo;</p>
+          <p class="testi-card__text">The combination of physiotherapy and therapy gave me the strength to recover physically and emotionally.</p>
+          <div class="testi-card__person">
+            <img src="assets/figma/avatar-rohan.png" alt="" loading="lazy">
+            <div>
+              <p class="testi-card__name">– Rohan K.</p>
+              <p class="testi-card__role">Physiotherapy Client</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="testi-card">
+          <p class="testi-card__quote" aria-hidden="true">&ldquo;</p>
+          <p class="testi-card__text">A safe and compassionate space for my family and me. We're more connected and happier than ever.</p>
+          <div class="testi-card__person">
+            <img src="assets/figma/avatar-priya.png" alt="" loading="lazy">
+            <div>
+              <p class="testi-card__name">– Priya S.</p>
+              <p class="testi-card__role">Family Therapy Client</p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="testi-dots" id="testiDots" role="tablist" aria-label="Testimonial slides"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img class="footer-brand__logo" src="assets/AthisaLogo.svg" alt="Athisa Health">
+        <p>Healing the whole you through mind, body, and lifestyle.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Athisa Health on Instagram">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="#" aria-label="Athisa Health on Facebook">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 8.5h2V5.3h-2c-2 0-3.4 1.4-3.4 3.5v2H8.7v3.1h1.9V21h3.1v-7.1H16l.5-3.1h-2.6V9c0-.6.3-1.1 1.1-1.1Z" fill="currentColor"/></svg>
+          </a>
+          <a href="#" aria-label="Athisa Health on LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8" cy="8.3" r="1.15" fill="currentColor"/><path d="M8 11v6M12 11v6M12 13.4c0-1.4 1-2.4 2.2-2.4S16 12 16 13.4V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-heading">Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="home.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="resources.html">Resources</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-heading">Contact Us</h3>
+        <ul class="footer-contact">
+          <li><img src="assets/figma/icon-footer-phone.svg" alt=""><a href="tel:+919695599699">+91 9695599699</a></li>
+          <li><img src="assets/figma/icon-footer-email.svg" alt=""><a href="mailto:hello@athisahealth.com">hello@athisahealth.com</a></li>
+          <li><img src="assets/figma/icon-footer-location.svg" alt=""><span>Apurupa BDR, 271, Road Number 10, Jubilee Hills, Hyderabad, Telangana 500033</span></li>
+          <li><img src="assets/figma/icon-footer-appointment.svg" alt=""><span>In-Person &amp; Virtual Appointments</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">© 2024 Athisa Health. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- ============ Scripts ============ -->
+<script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Mobile nav ---- */
+  var toggle = document.getElementById('menuToggle');
+  var menu = document.getElementById('mobileMenu');
+  function closeMenu() {
+    toggle.classList.remove('is-active');
+    toggle.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('is-open');
+  }
+  function openMenu() {
+    toggle.classList.add('is-active');
+    toggle.setAttribute('aria-expanded', 'true');
+    menu.classList.add('is-open');
+  }
+  toggle.addEventListener('click', function () {
+    menu.classList.contains('is-open') ? closeMenu() : openMenu();
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+  menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeMenu); });
+
+  /* ---- Lenis smooth scroll ---- */
+  var lenis = null;
+  if (!reduceMotion && window.Lenis) {
+    lenis = new Lenis({
+      duration: 1.05,
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.1
+    });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  }
+
+  /* ---- Anchor links respect Lenis ---- */
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var id = link.getAttribute('href');
+      if (id.length < 2) return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      if (lenis) { lenis.scrollTo(target, { offset: -20 }); }
+      else { target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+
+  /* ---- Scroll reveal ---- */
+  var revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  /* ---- Hero parallax (subtle, GPU-friendly) ---- */
+  var parallaxEl = document.querySelector('[data-parallax]');
+  if (parallaxEl && !reduceMotion) {
+    var ticking = false;
+    function updateParallax() {
+      var rect = parallaxEl.getBoundingClientRect();
+      var vh = window.innerHeight || 800;
+      var progress = 1 - Math.min(Math.max(rect.top / vh, -1), 1);
+      var translate = (progress - 0.5) * 24;
+      parallaxEl.style.transform = 'translate3d(0,' + translate.toFixed(2) + 'px,0)';
+      ticking = false;
+    }
+    function onScroll() {
+      if (!ticking) { requestAnimationFrame(updateParallax); ticking = true; }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    if (lenis) { lenis.on('scroll', onScroll); }
+    updateParallax();
+  }
+
+  /* ---- Testimonial mobile carousel dots ---- */
+  var track = document.getElementById('testiTrack');
+  var dotsWrap = document.getElementById('testiDots');
+  if (track && dotsWrap) {
+    var cards = Array.prototype.slice.call(track.children);
+    cards.forEach(function (card, i) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', 'Go to testimonial ' + (i + 1));
+      dot.setAttribute('aria-current', i === 0 ? 'true' : 'false');
+      dot.addEventListener('click', function () {
+        track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+      });
+      dotsWrap.appendChild(dot);
+    });
+    var dots = Array.prototype.slice.call(dotsWrap.children);
+    var scrollTimeout;
+    track.addEventListener('scroll', function () {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function () {
+        var trackLeft = track.scrollLeft;
+        var closest = 0;
+        var closestDist = Infinity;
+        cards.forEach(function (card, i) {
+          var dist = Math.abs(card.offsetLeft - track.offsetLeft - trackLeft);
+          if (dist < closestDist) { closestDist = dist; closest = i; }
+        });
+        dots.forEach(function (d, i) { d.setAttribute('aria-current', i === closest ? 'true' : 'false'); });
+      }, 100);
+    }, { passive: true });
+  }
+})();
+</script>
+
+</body>
+</html>

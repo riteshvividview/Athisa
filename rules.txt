@@ -1,0 +1,386 @@
+# Website UI/UX Development Rule Sheet (Mobile-First)
+
+## Core Development Principles
+
+1. Follow a **Mobile-First Development Approach** at all times.
+2. Design for mobile screens first, then progressively enhance for tablets and desktops.
+3. Every page must be fully responsive.
+4. Never compromise layout consistency between screen sizes.
+5. Maintain identical visual hierarchy across all devices.
+6. Components should adapt, not break.
+7. Every element must have a defined purpose.
+8. Avoid unnecessary visual clutter.
+9. Prioritize usability before aesthetics.
+10. Maintain clean and scalable code structure.
+
+---
+
+# Responsive Design Rules
+
+## Mobile (Primary)
+
+* Design mobile layouts first.
+* Use a single-column layout unless absolutely necessary.
+* Prioritize thumb-friendly interactions.
+* Buttons should be easily tappable.
+* Maintain adequate spacing between touch targets.
+* Avoid horizontal scrolling.
+* Content should fit naturally within the viewport.
+* Images should automatically resize.
+* Cards should stack vertically.
+* Navigation should collapse into a mobile menu when required.
+* Forms should be optimized for mobile keyboards.
+
+---
+
+## Tablet
+
+* Expand layouts naturally from mobile.
+* Use two-column layouts where appropriate.
+* Increase spacing proportionally.
+* Preserve the mobile reading flow.
+* Avoid making elements excessively large.
+* Navigation can expand if space allows.
+* Maintain consistent alignment with the mobile layout.
+
+---
+
+## Desktop
+
+* Utilize available screen width without stretching content excessively.
+* Keep content centered within a maximum container width.
+* Use multi-column layouts only when they improve readability.
+* Preserve the same content hierarchy as mobile.
+* Avoid oversized typography or components.
+* Ensure whitespace improves readability rather than creating empty areas.
+
+---
+
+# Layout Rules
+
+1. No overlapping elements under any circumstances.
+2. No hidden content.
+3. No clipped components.
+4. No overflowing text.
+5. No overflowing images.
+6. No horizontal scrollbar.
+7. No layout breaking.
+8. Maintain equal spacing throughout.
+9. All sections must align consistently.
+10. Containers should resize gracefully.
+
+---
+
+# Alignment Rules
+
+Every element must align to a consistent layout grid.
+
+Rules:
+
+* Left alignment should remain consistent.
+* Vertical spacing must remain consistent.
+* Horizontal spacing must remain consistent.
+* Cards should align perfectly.
+* Icons should align with associated text.
+* Buttons should align with surrounding elements.
+* Inputs should align with labels.
+* Images should align with surrounding content.
+* Headers should align with page content.
+* Footer elements should follow the same grid.
+
+Never place elements randomly.
+
+---
+
+# Spacing Rules
+
+Maintain a consistent spacing system throughout the website.
+
+Examples:
+
+* Small spacing
+* Medium spacing
+* Large spacing
+* Extra-large spacing
+
+Rules:
+
+* Equal padding on similar components.
+* Equal margin between sections.
+* Equal spacing inside cards.
+* Equal spacing between buttons.
+* Maintain visual rhythm.
+* Avoid crowded layouts.
+* Avoid excessive empty space.
+
+---
+
+# Typography Rules
+
+Maintain a consistent typography hierarchy.
+
+Rules:
+
+* One primary heading style.
+* One secondary heading style.
+* One body text style.
+* One caption style.
+* Maintain consistent font weights.
+* Maintain consistent line height.
+* Maintain readable paragraph width.
+* Never allow text overflow.
+* Prevent text clipping.
+* Scale typography proportionally across devices.
+
+---
+
+# Image Rules
+
+* Images must never stretch.
+* Images must never distort.
+* Preserve aspect ratio.
+* Lazy-load images when appropriate.
+* Optimize image sizes.
+* Use responsive image sizing.
+* Maintain equal image spacing.
+* Avoid pixelation.
+* Maintain consistent border radius where applicable.
+
+---
+
+# Button Rules
+
+Buttons must remain consistent.
+
+Rules:
+
+* Same border radius.
+* Same padding.
+* Same hover behavior.
+* Same active behavior.
+* Same disabled behavior.
+* Same font style.
+* Same icon spacing.
+* Full-width buttons on mobile when appropriate.
+* Never allow button text to overflow.
+
+---
+
+# Card Rules
+
+Cards must maintain consistency.
+
+Rules:
+
+* Equal height where appropriate.
+* Equal padding.
+* Equal spacing.
+* Equal shadows.
+* Equal border radius.
+* Equal typography hierarchy.
+* Equal image sizing.
+* Equal hover effects.
+* Never overlap adjacent cards.
+
+---
+
+# Form Rules
+
+Forms must be user-friendly.
+
+Rules:
+
+* Labels always visible.
+* Proper input spacing.
+* Consistent input height.
+* Proper validation messages.
+* Accessible error states.
+* Keyboard-friendly navigation.
+* Mobile keyboard optimization.
+* Logical tab order.
+* Required fields clearly indicated.
+
+---
+
+# Navigation Rules
+
+Navigation must remain intuitive.
+
+Rules:
+
+* Sticky navigation when appropriate.
+* Active page indication.
+* Responsive mobile menu.
+* No broken navigation links.
+* Accessible keyboard navigation.
+* Clear visual hierarchy.
+* Smooth opening and closing animations.
+
+---
+
+# Accessibility Rules
+
+The website must meet modern accessibility standards.
+
+Rules:
+
+* Sufficient color contrast.
+* Keyboard accessibility.
+* Screen reader support.
+* Proper semantic HTML.
+* Descriptive button labels.
+* Alt text for images.
+* Visible focus indicators.
+* Avoid conveying information by color alone.
+* Maintain readable font sizes.
+
+---
+
+# Animation Rules
+
+Animations should enhance usability.
+
+Rules:
+
+* Keep animations subtle.
+* Avoid excessive motion.
+* Maintain consistent durations.
+* Use smooth easing.
+* Do not animate every element.
+* Never block user interaction.
+* Respect reduced-motion preferences.
+
+---
+
+# Performance Rules
+
+The website should load efficiently.
+
+Rules:
+
+* Optimize images.
+* Minimize JavaScript.
+* Reduce unnecessary animations.
+* Lazy-load non-critical assets.
+* Avoid render-blocking resources.
+* Optimize fonts.
+* Minimize layout shifts.
+* Ensure fast initial page load.
+
+---
+
+# Component Consistency Rules
+
+Every reusable component should follow the same design system.
+
+Rules:
+
+* Same border radius.
+* Same spacing scale.
+* Same typography.
+* Same icon style.
+* Same button style.
+* Same color palette.
+* Same shadow system.
+* Same interaction behavior.
+
+---
+
+# Error Prevention Rules
+
+Never allow:
+
+* Overlapping elements.
+* Hidden text.
+* Cropped buttons.
+* Misaligned components.
+* Inconsistent spacing.
+* Broken layouts.
+* Pixelated images.
+* Unexpected scrolling.
+* Broken links.
+* Missing assets.
+* Console errors.
+* Layout shifts during loading.
+
+---
+
+# Visual Consistency Rules
+
+Every page must appear as part of the same design system.
+
+Rules:
+
+* Consistent colors.
+* Consistent spacing.
+* Consistent typography.
+* Consistent icons.
+* Consistent shadows.
+* Consistent borders.
+* Consistent animations.
+* Consistent card styles.
+* Consistent button styles.
+* Consistent form styles.
+
+---
+
+# Quality Assurance Checklist
+
+Before considering any page complete, verify that:
+
+✓ Fully responsive on mobile, tablet, and desktop.
+
+✓ Mobile layout is the primary design.
+
+✓ No horizontal scrolling.
+
+✓ No overlapping elements.
+
+✓ No broken layouts.
+
+✓ All content remains readable.
+
+✓ Images scale correctly.
+
+✓ Buttons remain accessible.
+
+✓ Navigation functions correctly.
+
+✓ Forms validate properly.
+
+✓ Typography remains consistent.
+
+✓ Spacing follows the design system.
+
+✓ Colors remain consistent.
+
+✓ Animations are smooth and purposeful.
+
+✓ Performance is optimized.
+
+✓ Accessibility requirements are satisfied.
+
+✓ No console errors or warnings.
+
+✓ Pixel-perfect alignment across components.
+
+✓ Every page maintains visual consistency.
+
+✓ The final implementation matches the approved design exactly, preserving layout, spacing, typography, colors, imagery, icons, and interactions unless an intentional responsive adaptation is required.
+
+---
+
+# Final Golden Rules
+
+1. Mobile First Always.
+2. Scale Up, Never Scale Down.
+3. No Overlapping Elements.
+4. No Horizontal Scrolling.
+5. Perfect Alignment Everywhere.
+6. Consistent Spacing System.
+7. Pixel-Perfect Component Consistency.
+8. Responsive Across All Devices.
+9. Accessibility Is Mandatory.
+10. Performance Is a Requirement, Not an Afterthought.
+11. Every section must adapt gracefully without breaking the layout.
+12. Match the approved design with the highest possible visual accuracy while preserving responsiveness and usability.

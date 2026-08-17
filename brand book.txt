@@ -1,0 +1,14 @@
+Fonts used is Athisa: (Import from google fonts)
+
+Roboto Slab (titles)
+Rubik (navbar items and body text)
+
+
+Colors:
+
+#FDF1EE
+#885784
+#FFFFFF
+#602B7A
+#878BAE54
+
