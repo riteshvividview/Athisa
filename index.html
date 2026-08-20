@@ -40,7 +40,7 @@
 
   /* ============ Reset ============ */
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: auto; overflow-x: hidden; width: 100%; }
+  html { scroll-behavior: auto; overflow-x: clip; width: 100%; }
   body, h1, h2, h3, h4, p, ul, figure { margin: 0; }
   ul { padding: 0; list-style: none; }
   img { max-width: 100%; display: block; }
@@ -53,7 +53,7 @@
     color: var(--color-slate);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow-x: clip;
     /* One continuous canvas instead of stacked colored blocks: cream/white
        wash blended across the whole document, positioned by percentage so
        it lines up with section boundaries at any viewport size. Stops are
@@ -129,6 +129,48 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+
+  /* ============ Page transition ============
+     Full-screen "iris wipe": a brand-gradient panel that clip-path
+     circles closed/open around center, with the same droplet glyph used
+     in the hero kicker as the branded loading beat. Base (un-classed)
+     state is fully covering so there's no flash of the raw page before
+     JS runs; site.js adds `is-revealed` on load to shrink it away, and
+     removes it right before navigating to a new page so the covering
+     animation plays first. Plain CSS transitions (no GSAP dependency)
+     so this identical block can run on every page regardless of what
+     else has loaded. */
+  .page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    pointer-events: none;
+  }
+  .page-transition__panel {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-primary) 55%, var(--color-deep-purple) 100%);
+    clip-path: circle(150% at 50% 50%);
+    transition: clip-path 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .page-transition.is-revealed .page-transition__panel {
+    clip-path: circle(0% at 50% 50%);
+  }
+  .page-transition__mark {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .page-transition__mark svg { width: 56px; height: 65px; display: block; }
+  .page-transition.is-revealed .page-transition__mark {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .page-transition__panel, .page-transition__mark { transition: none !important; }
   }
 
   /* ============ Eyebrow / kicker ============ */
@@ -315,6 +357,7 @@
   /* ============ Hero ============ */
   .hero {
     position: relative;
+    z-index: 1;
     padding-top: 130px;
     padding-bottom: 96px;
     overflow: clip;
@@ -403,9 +446,19 @@
   /* ============ Space-to-be + Approach ============ */
   .interlude {
     position: relative;
-    padding-block: clamp(56px, 8vw, 96px);
+    z-index: 2;
+    background: var(--color-white);
+    padding-top: clamp(56px, 8vw, 96px);
+    padding-bottom: clamp(120px, 15vw, 200px);
     overflow: clip;
   }
+  .interlude__wave {
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    line-height: 0;
+    z-index: 1;
+  }
+  .interlude__wave img { width: 100%; height: auto; }
   /* Watercolor wash stack (Figma "image 18" / "image 22" / "image 21").
      Figma's frame is 1440px wide, but our content column (.container) caps at
      var(--container-max). Anchoring the washes to their own 1440px-capped,
@@ -504,20 +557,65 @@
   /* ============ Services ============ */
   .services {
     position: relative;
-    padding-block: clamp(64px, 8vw, 112px);
+    z-index: 1;
+    background: var(--color-cream);
+    padding-top: clamp(8px, 1.5vw, 20px);
+    padding-bottom: clamp(64px, 8vw, 112px);
     overflow: clip;
   }
-  .services::before {
-    content: '';
-    position: absolute;
-    top: 6%;
-    right: -8%;
-    width: min(620px, 60%);
-    aspect-ratio: 1;
-    background: radial-gradient(closest-side, rgba(96,43,122,0.09), rgba(96,43,122,0) 70%);
-    pointer-events: none;
-    z-index: 0;
+  /* Floating background icons: soft pink line-icon chips that drift
+     continuously (CSS keyframes, on the inner element) and also parallax
+     against scroll (GSAP, on the outer layer wrapper) — the two motions
+     compose independently since they're on different nested elements,
+     so they never fight over the same transform each frame. */
+  /* Only shown once the viewport is wide enough that real empty cream
+     margin exists outside the card container (container maxes out at
+     1280px + up to 96px gutter each side) — below that there's no safe
+     space for these to sit without overlapping or edge-clipping the
+     cards, so they're hidden rather than forced to fit. */
+  .services__bg {
+    display: none;
   }
+  @media (min-width: 1560px) {
+    .services__bg {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+  }
+  .services__blob-layer {
+    position: absolute;
+    will-change: transform;
+  }
+  .services__blob-layer--1 { top: 14%; right: 2%; }
+  .services__blob-layer--2 { bottom: 16%; left: 1.5%; }
+  .services__blob-layer--3 { top: 56%; right: 4%; }
+
+  .services__float-icon {
+    width: var(--icon-size, 72px);
+    height: var(--icon-size, 72px);
+    border-radius: 50%;
+    background: rgba(136, 87, 132, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    animation: services-icon-float ease-in-out infinite;
+  }
+  .services__float-icon img { width: 52%; height: 52%; object-fit: contain; }
+  .services__float-icon--1 { --icon-size: 96px; animation-duration: 12s; }
+  .services__float-icon--2 { --icon-size: 78px; animation-duration: 15s; animation-delay: -4s; }
+  .services__float-icon--3 { --icon-size: 60px; animation-duration: 9s; animation-delay: -2s; }
+  @keyframes services-icon-float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-14px, 18px) rotate(6deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .services__float-icon { animation: none; }
+  }
+
   .services > .container { position: relative; z-index: 1; }
   .services__banner {
     display: inline-flex;
@@ -533,6 +631,7 @@
     font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--color-deep-purple);
   }
   .services__head { text-align: center; max-width: 760px; margin: 0 auto 48px; }
+  .services__intro-parallax { will-change: transform; }
 
   .services__grid {
     display: grid;
@@ -863,6 +962,15 @@
 </head>
 <body>
 
+<div class="page-transition" aria-hidden="true">
+  <div class="page-transition__panel"></div>
+  <div class="page-transition__mark">
+    <svg viewBox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 1c3 2 5 5 5 8a5 5 0 1 1-10 0c0-3 2-6 5-8Z" fill="#FDF1EE"/>
+    </svg>
+  </div>
+</div>
+
 <noscript>
   <style>
     .reveal, .reveal-stagger > * { opacity: 1 !important; transform: none !important; }
@@ -875,7 +983,7 @@
 <header class="site-header">
   <nav class="navbar" aria-label="Primary">
     <ul class="navbar__links">
-      <li><a href="index.html" aria-current="page">Home</a></li>
+      <li><a href="/" aria-current="page">Home</a></li>
       <li><a href="services">Services</a></li>
       <li><a href="about">About Us</a></li>
       <li><a href="faq">FAQ</a></li>
@@ -883,7 +991,7 @@
     </ul>
 
     <div class="navbar__logo">
-      <a href="index.html" aria-label="Athisa Health home">
+      <a href="/" aria-label="Athisa Health home">
         <img src="assets/AthisaLogo.svg" alt="Athisa Health">
       </a>
     </div>
@@ -896,7 +1004,7 @@
   <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
     <img class="mobile-menu__brandmark" src="assets/AthisaLogo.svg" alt="" aria-hidden="true">
     <ul class="mobile-menu__links">
-      <li><a href="index.html">Home</a></li>
+      <li><a href="/">Home</a></li>
       <li><a href="services">Services</a></li>
       <li><a href="about">About Us</a></li>
       <li><a href="faq">FAQ</a></li>
@@ -913,17 +1021,17 @@
       <div class="hero__content">
         <h1 class="h-72 hero__heading js-split" data-split-delay="0.35">Curated Mental Wellness Rooted in Care</h1>
 
-        <div class="hero__kicker">
+        <div class="hero__kicker reveal">
           <svg width="18" height="21" viewBox="0 0 18 21" fill="none" aria-hidden="true">
             <path d="M9 1c3 2 5 5 5 8a5 5 0 1 1-10 0c0-3 2-6 5-8Z" stroke="#885784" stroke-width="1.4" fill="none"/>
           </svg>
           <span>Healing the Whole You</span>
         </div>
 
-        <p class="hero__sub">Where evidence-based therapy meets a deeply human approach to healing.</p>
-        <p class="hero__body">We offer personalized mental health support through a team of licensed professionals — designed to help you feel understood, supported, and empowered.</p>
+        <p class="hero__sub reveal">Where evidence-based therapy meets a deeply human approach to healing.</p>
+        <p class="hero__body reveal">We offer personalized mental health support through a team of licensed professionals — designed to help you feel understood, supported, and empowered.</p>
 
-        <div class="hero__actions">
+        <div class="hero__actions reveal-stagger">
           <a class="btn btn-primary" href="contact">
             Book a Session
             <span class="btn-icon" aria-hidden="true">
@@ -933,7 +1041,7 @@
           <a class="btn btn-outline" href="services">Explore Services</a>
         </div>
 
-        <div class="hero__badges">
+        <div class="hero__badges reveal-stagger">
           <div class="hero__badge"><img src="assets/figma/badge-inperson.png" alt=""><span>In-Person Care</span></div>
           <div class="hero__badge"><img src="assets/figma/badge-virtual.png" alt=""><span>Virtual Therapy</span></div>
           <div class="hero__badge"><img src="assets/figma/badge-holistic.png" alt=""><span>Holistic Healing</span></div>
@@ -996,14 +1104,25 @@
         </div>
       </div>
     </div>
+
+    <div class="interlude__wave" aria-hidden="true">
+      <img src="assets/figma/interlude-wave-bottom.svg" alt="">
+    </div>
   </section>
 
   <!-- ============ SERVICES ============ -->
   <section class="services" id="services">
+    <div class="services__bg" aria-hidden="true">
+      <div class="services__blob-layer services__blob-layer--1"><div class="services__float-icon services__float-icon--1"><img src="assets/figma/icon-mission-compassionate.svg" alt=""></div></div>
+      <div class="services__blob-layer services__blob-layer--2"><div class="services__float-icon services__float-icon--2"><img src="assets/figma/icon-mission-safe.svg" alt=""></div></div>
+      <div class="services__blob-layer services__blob-layer--3"><div class="services__float-icon services__float-icon--3"><img src="assets/figma/icon-mission-holistic.svg" alt=""></div></div>
+    </div>
     <div class="container">
-      <div class="services__banner reveal"><span>Our Services</span></div>
-      <div class="services__head reveal">
-        <h2 class="h-36 js-split">Support for Every Step of Your Healing Journey</h2>
+      <div class="services__intro-parallax">
+        <div class="services__banner reveal"><span>Our Services</span></div>
+        <div class="services__head reveal">
+          <h2 class="h-36 js-split">Support for Every Step of Your Healing Journey</h2>
+        </div>
       </div>
 
       <div class="services__grid reveal-stagger">
@@ -1153,7 +1272,7 @@
   <!-- ============ HOW IT WORKS ============ -->
   <section class="section section--cream">
     <div class="container">
-      <div class="section__head reveal">
+      <div class="section__head steps-section__head reveal">
         <span class="eyebrow" style="text-align:center;">How It Works</span>
         <h2 class="h-48 js-split">Your Journey to Better Mental Health</h2>
       </div>
@@ -1261,7 +1380,7 @@
       <div class="footer-col">
         <h3 class="footer-heading">Quick Links</h3>
         <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li><a href="about">About Us</a></li>
           <li><a href="services">Services</a></li>
           <li><a href="resources.html">Resources</a></li>
@@ -1296,6 +1415,43 @@
   var hasGsap = !!(window.gsap && window.ScrollTrigger);
   if (hasGsap) { gsap.registerPlugin(ScrollTrigger); }
   else { document.documentElement.classList.add('no-gsap'); }
+
+  /* ---- Page transition: covers on the way out, reveals on arrival.
+     Plain CSS transitions (not GSAP-dependent) so it can't be skipped by
+     a slow CDN script and behaves identically on every page. ---- */
+  (function pageTransition() {
+    var overlay = document.querySelector('.page-transition');
+    if (!overlay) return;
+    var duration = reduceMotion ? 0 : 850;
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        overlay.classList.add('is-revealed');
+      });
+    });
+
+    function isInternalNavigableLink(a) {
+      if (!a || !a.getAttribute('href')) return false;
+      if (a.target && a.target !== '_self') return false;
+      if (a.hasAttribute('download')) return false;
+      var url;
+      try { url = new URL(a.href, window.location.href); } catch (e) { return false; }
+      if (url.origin !== window.location.origin) return false;
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
+      if (url.pathname === window.location.pathname && url.hash) return false;
+      return true;
+    }
+
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest('a');
+      if (!isInternalNavigableLink(a)) return;
+      e.preventDefault();
+      var dest = a.href;
+      overlay.classList.remove('is-revealed');
+      setTimeout(function () { window.location.href = dest; }, duration);
+    });
+  })();
 
   /* ---- Mobile nav ---- */
   var toggle = document.getElementById('menuToggle');
@@ -1394,8 +1550,13 @@
 
     /* Reveal groups: same visual language as the CSS fallback (rise + fade)
        but driven by ScrollTrigger so timing/easing is consistent with the
-       rest of the scroll story, with a gentle overshoot-free ease. */
+       rest of the scroll story, with a gentle overshoot-free ease. Card
+       grids get their own more dramatic treatment below, so they're
+       skipped here to avoid double-animating. */
+    var cardGroupSelector = '.services__grid, .team-grid, .steps, #testiTrack';
     revealEls.forEach(function (el) {
+      if (el.matches(cardGroupSelector)) return;
+      if (el.closest('.hero__content')) return;
       var isStagger = el.classList.contains('reveal-stagger');
       var targets = isStagger ? gsap.utils.toArray(el.children) : el;
       gsap.to(targets, {
@@ -1410,6 +1571,37 @@
           once: true
         },
         onStart: function () { el.classList.add('is-visible'); }
+      });
+    });
+
+    /* ---- Signature card entrance: a clip-path "curtain rise" combined
+       with scale + blur, distinct from the plain fade used elsewhere so
+       card grids read as a premium, deliberate reveal rather than a
+       generic fade-up. Each grid's cards stagger in together. ---- */
+    gsap.utils.toArray(cardGroupSelector).forEach(function (group) {
+      var cards = gsap.utils.toArray(group.children);
+      if (!cards.length) return;
+      gsap.set(cards, {
+        clipPath: 'inset(0% 0% 100% 0%)',
+        y: 48,
+        scale: 0.94,
+        opacity: 1,
+        filter: 'blur(10px)'
+      });
+      gsap.to(cards, {
+        clipPath: 'inset(0% 0% 0% 0%)',
+        y: 0,
+        scale: 1,
+        filter: 'blur(0px)',
+        duration: 1.1,
+        ease: 'power4.out',
+        stagger: 0.13,
+        scrollTrigger: {
+          trigger: group,
+          start: 'top 88%',
+          once: true
+        },
+        onStart: function () { group.classList.add('is-visible'); }
       });
     });
 
@@ -1465,6 +1657,39 @@
       });
     });
 
+    /* ---- Hero entrance: the heading (js-split, below) starts at 0.35s.
+       This choreographs the rest of the hero copy to cascade in right
+       after it — kicker, subhead, body, buttons, badges — as clearly
+       separated, individually-visible steps (each element gets its own
+       explicit from-state via gsap.set so the motion reads plainly,
+       rather than relying on the CSS base state alone). No scale/bounce
+       on the buttons — plain fade + rise, matching the rest of the site. ---- */
+    var heroContentEl = document.querySelector('.hero__content');
+    if (heroContentEl) {
+      var heroKicker = heroContentEl.querySelector('.hero__kicker');
+      var heroSub = heroContentEl.querySelector('.hero__sub');
+      var heroBody = heroContentEl.querySelector('.hero__body');
+      var heroActionBtns = gsap.utils.toArray('.hero__actions .btn');
+      var heroBadgeEls = gsap.utils.toArray('.hero__badges .hero__badge');
+
+      gsap.set([heroKicker, heroSub, heroBody], { opacity: 0, y: 34 });
+      gsap.set(heroActionBtns, { opacity: 0, y: 24 });
+      gsap.set(heroBadgeEls, { opacity: 0, y: 22 });
+
+      var heroTl = gsap.timeline({ delay: 0.4 });
+      heroTl
+        .to(heroKicker, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0)
+        .to(heroSub, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }, 0.4)
+        .to(heroBody, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }, 0.65)
+        .to(heroActionBtns, { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', stagger: 0.12 }, 0.95)
+        .to(heroBadgeEls, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.14 }, 1.25)
+        .call(function () {
+          heroContentEl.querySelectorAll('.reveal, .reveal-stagger').forEach(function (el) {
+            el.classList.add('is-visible');
+          });
+        }, null, 0);
+    }
+
     /* ---- Hero depth: content and photo drift at different speeds, and
        the whole hero softens as the next section rises over it, so the
        boundary reads as a continuous transition rather than a hard cut. ---- */
@@ -1490,6 +1715,56 @@
           scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
         });
       }
+    }
+
+    /* ---- Interlude watercolor washes: slow drift at different speeds per
+       layer for depth, contained within the section's own overflow:clip. ---- */
+    var washLayer = document.querySelector('.interlude__wash-layer');
+    if (washLayer) {
+      gsap.to('.interlude__wash--primary', {
+        yPercent: 12, ease: 'none',
+        scrollTrigger: { trigger: washLayer, start: 'top bottom', end: 'bottom top', scrub: 0.8 }
+      });
+      gsap.to('.interlude__wash--tertiary', {
+        yPercent: -9, ease: 'none',
+        scrollTrigger: { trigger: washLayer, start: 'top bottom', end: 'bottom top', scrub: 0.8 }
+      });
+      gsap.to('.interlude__wash--secondary', {
+        yPercent: 7, ease: 'none',
+        scrollTrigger: { trigger: washLayer, start: 'top bottom', end: 'bottom top', scrub: 0.8 }
+      });
+    }
+
+    /* ---- Services background blobs: scroll parallax on top of their own
+       continuous CSS float, at different speeds/directions per blob for
+       depth (the two motions live on different nested elements so they
+       never overwrite the same transform). ---- */
+    var servicesBlobLayers = gsap.utils.toArray('.services__blob-layer');
+    var blobSpeeds = [16, -20, 26];
+    servicesBlobLayers.forEach(function (layer, i) {
+      gsap.to(layer, {
+        yPercent: blobSpeeds[i % blobSpeeds.length],
+        ease: 'none',
+        scrollTrigger: { trigger: '.services', start: 'top bottom', end: 'bottom top', scrub: 0.8 }
+      });
+    });
+
+    /* ---- "Our Services" badge + heading: horizontal parallax drift as the
+       section scrolls into view. Uses x (not y) specifically so it can't
+       collide with the y-based fade-up reveal already running on these
+       same elements — badge and heading drift apart at different speeds
+       for a layered, deliberate feel rather than moving as one rigid block. ---- */
+    var servicesBadge = document.querySelector('.services__banner');
+    var servicesHeading = document.querySelector('.services__head');
+    if (servicesBadge && servicesHeading) {
+      gsap.fromTo(servicesBadge,
+        { x: -36 },
+        { x: 36, ease: 'none', scrollTrigger: { trigger: '.services', start: 'top bottom', end: 'top 20%', scrub: 0.7 } }
+      );
+      gsap.fromTo(servicesHeading,
+        { x: 24 },
+        { x: -24, ease: 'none', scrollTrigger: { trigger: '.services', start: 'top bottom', end: 'top 20%', scrub: 0.7 } }
+      );
     }
 
     /* ---- "A Space to Be" decorative graphic: soft parallax + scale-in ---- */

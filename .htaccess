@@ -1,9 +1,12 @@
 RewriteEngine On
 
+# /index or /index.html -> / (homepage always lives at the bare root)
+RewriteCond %{THE_REQUEST} \s/+index(\.html)?[\s?] [NC]
+RewriteRule ^ / [R=301,L]
+
 # Redirect requests for the literal .html URL to the clean, extensionless one
-# e.g. /faq.html -> /faq (skip index.html so the homepage stays at /)
+# e.g. /faq.html -> /faq
 RewriteCond %{THE_REQUEST} \s/+(.+)\.html[\s?] [NC]
-RewriteCond %{REQUEST_FILENAME} !index\.html$
 RewriteRule ^ /%1 [R=301,L]
 
 # Internally serve the .html file for clean URLs like /faq

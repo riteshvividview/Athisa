@@ -6,6 +6,43 @@
   if (hasGsap) { gsap.registerPlugin(ScrollTrigger); }
   else { document.documentElement.classList.add('no-gsap'); }
 
+  /* ---- Page transition: covers on the way out, reveals on arrival.
+     Plain CSS transitions (not GSAP-dependent) so it can't be skipped by
+     a slow CDN script and behaves identically on every page. ---- */
+  (function pageTransition() {
+    var overlay = document.querySelector('.page-transition');
+    if (!overlay) return;
+    var duration = reduceMotion ? 0 : 850;
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        overlay.classList.add('is-revealed');
+      });
+    });
+
+    function isInternalNavigableLink(a) {
+      if (!a || !a.getAttribute('href')) return false;
+      if (a.target && a.target !== '_self') return false;
+      if (a.hasAttribute('download')) return false;
+      var url;
+      try { url = new URL(a.href, window.location.href); } catch (e) { return false; }
+      if (url.origin !== window.location.origin) return false;
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
+      if (url.pathname === window.location.pathname && url.hash) return false;
+      return true;
+    }
+
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest('a');
+      if (!isInternalNavigableLink(a)) return;
+      e.preventDefault();
+      var dest = a.href;
+      overlay.classList.remove('is-revealed');
+      setTimeout(function () { window.location.href = dest; }, duration);
+    });
+  })();
+
   /* ---- Mobile nav ---- */
   var toggle = document.getElementById('menuToggle');
   var menu = document.getElementById('mobileMenu');
@@ -272,6 +309,78 @@
         {
           autoAlpha: 1, scale: 1, y: 0, ease: 'power2.out',
           scrollTrigger: { trigger: card, start: 'top 90%', end: 'top 55%', scrub: 0.5 }
+        }
+      );
+    });
+
+    /* ---- About page: Mission & Values icons "bloom" in (scale + rotate
+       from a compressed start), a distinct entrance from Services' card
+       tilt-settle and Home's card blur-clip — appropriate here since these
+       are icon-led cards, not text/list cards. ---- */
+    gsap.utils.toArray('.team-grid--quad .team-card__icon').forEach(function (icon) {
+      gsap.fromTo(icon,
+        { scale: 0.3, opacity: 0, rotate: -20 },
+        {
+          scale: 1, opacity: 1, rotate: 0, ease: 'back.out(2)', duration: 0.7,
+          scrollTrigger: { trigger: icon, start: 'top 90%', once: true }
+        }
+      );
+    });
+
+    /* ---- About page: Philosophy checklist ticks in one item at a time
+       (text slides in, then its check icon pops with a bounce) rather than
+       the group fading in together — makes the checklist read as a
+       sequence, matching "here is what we offer, step by step". ---- */
+    var checklistItems = gsap.utils.toArray('.checklist li');
+    if (checklistItems.length) {
+      var checklistIcons = checklistItems.map(function (li) { return li.querySelector('img'); });
+      gsap.set(checklistItems, { opacity: 0, x: -16 });
+      gsap.set(checklistIcons, { scale: 0, rotate: -45 });
+      ScrollTrigger.create({
+        trigger: checklistItems[0].closest('.checklist'),
+        start: 'top 85%',
+        once: true,
+        onEnter: function () {
+          var tl = gsap.timeline();
+          checklistItems.forEach(function (li, i) {
+            tl.to(li, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, i * 0.18)
+              .to(checklistIcons[i], { scale: 1, rotate: 0, duration: 0.45, ease: 'back.out(2.5)' }, i * 0.18 + 0.05);
+          });
+        }
+      });
+    }
+
+    /* ---- About page: Why Choose cards grow a left accent bar as they
+       scroll in (element injected here since GSAP can't target a ::before
+       pseudo-element directly) — a "highlighter" flourish distinct from
+       Services' physical card-settle, fitting since these are plain text
+       cards with no icon to animate instead. ---- */
+    gsap.utils.toArray('.why-choose__grid .info-card').forEach(function (card) {
+      var accent = document.createElement('span');
+      accent.className = 'info-card__accent';
+      accent.setAttribute('aria-hidden', 'true');
+      card.insertBefore(accent, card.firstChild);
+      gsap.fromTo(accent,
+        { scaleY: 0 },
+        {
+          scaleY: 1, ease: 'power2.out', duration: 0.6,
+          scrollTrigger: { trigger: card, start: 'top 88%', once: true }
+        }
+      );
+    });
+
+    /* ---- FAQ page: accordion rows alternate in from left/right (a
+       "conversational" back-and-forth), distinct from the straight fade-up
+       used for plain text sections and from every other page's card
+       entrances — fitting since these rows are a dialogue (question /
+       answer), not a grid of cards. No CSS hidden state (gsap.fromTo sets
+       it at runtime), so a row is simply visible at rest without JS. ---- */
+    gsap.utils.toArray('.js-accordion .accordion-item').forEach(function (item, i) {
+      gsap.fromTo(item,
+        { opacity: 0, x: i % 2 === 0 ? -30 : 30 },
+        {
+          opacity: 1, x: 0, ease: 'power3.out', duration: 0.6,
+          scrollTrigger: { trigger: item, start: 'top 92%', once: true }
         }
       );
     });

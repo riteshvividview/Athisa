@@ -33,6 +33,15 @@
 </head>
 <body>
 
+<div class="page-transition" aria-hidden="true">
+  <div class="page-transition__panel"></div>
+  <div class="page-transition__mark">
+    <svg viewBox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 1c3 2 5 5 5 8a5 5 0 1 1-10 0c0-3 2-6 5-8Z" fill="#FDF1EE"/>
+    </svg>
+  </div>
+</div>
+
 <noscript>
   <style>
     .reveal, .reveal-stagger > * { opacity: 1 !important; transform: none !important; }
@@ -45,7 +54,7 @@
 <header class="site-header">
   <nav class="navbar" aria-label="Primary">
     <ul class="navbar__links">
-      <li><a href="index.html">Home</a></li>
+      <li><a href="/">Home</a></li>
       <li><a href="services">Services</a></li>
       <li><a href="about" aria-current="page">About Us</a></li>
       <li><a href="faq">FAQ</a></li>
@@ -53,7 +62,7 @@
     </ul>
 
     <div class="navbar__logo">
-      <a href="index.html" aria-label="Athisa Health home">
+      <a href="/" aria-label="Athisa Health home">
         <img src="assets/AthisaLogo.svg" alt="Athisa Health">
       </a>
     </div>
@@ -66,7 +75,7 @@
   <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
     <img class="mobile-menu__brandmark" src="assets/AthisaLogo.svg" alt="" aria-hidden="true">
     <ul class="mobile-menu__links">
-      <li><a href="index.html">Home</a></li>
+      <li><a href="/">Home</a></li>
       <li><a href="services">Services</a></li>
       <li><a href="about">About Us</a></li>
       <li><a href="faq">FAQ</a></li>
@@ -191,7 +200,7 @@
   <!-- ============ CTA ============ -->
   <section class="section">
     <div class="container">
-      <div class="cta__card reveal">
+      <div class="cta__card js-cta-scale">
         <div class="cta__glow" aria-hidden="true"></div>
         <h2 class="h-36 cta__title js-split">Ready to Begin Your Healing Journey?</h2>
         <p class="lede cta__text">Take the first step toward a more balanced, peaceful, and empowered life.</p>
@@ -225,7 +234,7 @@
       <div class="footer-col">
         <h3 class="footer-heading">Quick Links</h3>
         <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li><a href="about">About Us</a></li>
           <li><a href="services">Services</a></li>
           <li><a href="resources.html">Resources</a></li>

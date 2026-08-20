@@ -28,7 +28,7 @@
 
   /* ============ Reset ============ */
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: auto; overflow-x: hidden; width: 100%; }
+  html { scroll-behavior: auto; overflow-x: clip; width: 100%; }
   body, h1, h2, h3, h4, p, ul, figure { margin: 0; }
   ul { padding: 0; list-style: none; }
   img { max-width: 100%; display: block; }
@@ -65,9 +65,49 @@
     color: var(--color-slate);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow-x: clip;
     background-image: var(--page-gradient);
     background-repeat: no-repeat;
+  }
+
+  /* ============ Page transition ============
+     Full-screen "iris wipe": a brand-gradient panel that clip-path
+     circles closed/open around center, with the same droplet glyph used
+     in the hero kicker as the branded loading beat. Base (un-classed)
+     state is fully covering so there's no flash of the raw page before
+     JS runs; site.js adds `is-revealed` on load to shrink it away, and
+     removes it right before navigating to a new page so the covering
+     animation plays first. Identical block to index.html's inline copy. */
+  .page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    pointer-events: none;
+  }
+  .page-transition__panel {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-primary) 55%, var(--color-deep-purple) 100%);
+    clip-path: circle(150% at 50% 50%);
+    transition: clip-path 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .page-transition.is-revealed .page-transition__panel {
+    clip-path: circle(0% at 50% 50%);
+  }
+  .page-transition__mark {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .page-transition__mark svg { width: 56px; height: 65px; display: block; }
+  .page-transition.is-revealed .page-transition__mark {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .page-transition__panel, .page-transition__mark { transition: none !important; }
   }
 
   h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--color-ink); font-weight: 400; }
@@ -860,6 +900,24 @@
   }
   .info-card__title { font-size: 20px; font-weight: 500; margin-bottom: 12px; }
   .info-card__text { font-size: 16px; line-height: 1.6; color: var(--color-slate); }
+
+  /* ============ Why Choose: growing accent bar (About page only) ============
+     A real element (injected by site.js, not a ::before) so GSAP can
+     scroll-scrub its scaleY directly — distinct entrance flourish from
+     Services' card-tilt and Home's card-blur, page-appropriate since these
+     are plain text cards with no icon to animate instead. */
+  .why-choose__grid .info-card {
+    position: relative;
+    overflow: hidden;
+    padding-left: 40px;
+  }
+  .info-card__accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--color-primary), var(--color-deep-purple));
+    transform-origin: top;
+  }
   .why-choose__grid { perspective: 1000px; }
 
   /* ============ CTA (Ready to Begin Your Healing Journey) ============ */
