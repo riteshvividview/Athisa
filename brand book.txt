@@ -1,14 +1,204 @@
-Fonts used is Athisa: (Import from google fonts)
+ATHISA HEALTH — BRAND & DESIGN SYSTEM
+Source of truth: Figma file "Athisa UI" (Home page frame). This document
+records the system as actually extracted from Figma and implemented in
+home.html — it is a reference, not a wishlist. Do not add colors, fonts,
+or component styles that aren't already here without checking Figma first.
 
-Roboto Slab (titles)
-Rubik (navbar items and body text)
+====================================================================
+1. TYPOGRAPHY
+====================================================================
 
+Fonts (import from Google Fonts):
+  Roboto Slab   — headings / display type
+  Rubik         — body copy, nav, buttons, labels, UI text
 
-Colors:
+Do not introduce a third font. (Two stray fonts — Libre Baskerville and
+Plus Jakarta Sans — appeared in the raw Figma export on isolated elements;
+these were export artifacts, not an intentional third typeface, and were
+normalized back to Rubik/Roboto Slab in the build.)
 
-#FDF1EE
-#885784
-#FFFFFF
-#602B7A
-#878BAE54
+Weights in use:
+  Roboto Slab: 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold)
+  Rubik:       400 (Regular), 500 (Medium), 600 (SemiBold)
 
+Type scale (desktop px, fluid via clamp() at smaller viewports):
+  Hero H1            72px / line-height 1.05 / Roboto Slab Regular
+  H2 — large           48px / line-height 1.15 / Roboto Slab Regular   (Team, How It Works)
+  H2 — medium-large    40px / line-height 1.15 / Roboto Slab SemiBold  ("A Space to Be")
+  H2 — medium          36px / line-height 1.2  / Roboto Slab Regular   (Approach, Services, Privacy)
+  H2 — small           30px / line-height 1.2  / Roboto Slab Regular   (Testimonials)
+  H3 — card title      18–24px / Roboto Slab Medium or SemiBold
+  Eyebrow / kicker     12px / uppercase / letter-spacing 1.2px / Rubik Regular
+  Body / lede          16–18px / line-height 1.55–1.6 / Rubik Regular
+  Small / caption      12–14px / Rubik Regular
+
+Never allow text to overflow or clip. Headings use fluid clamp() sizing;
+body copy keeps a readable measure (max-width) at all breakpoints.
+
+====================================================================
+2. COLOR
+====================================================================
+
+Core brand colors (as given):
+  --color-cream         #FDF1EE   Primary background wash
+  --color-primary       #885784   Primary brand purple (headings, links, buttons, icons)
+  --color-white         #FFFFFF   Cards, secondary background
+  --color-deep-purple   #602B7A   Secondary CTA / accent purple (deeper, higher contrast)
+  --color-muted         #878BAE54 Muted blue-grey at 33% alpha (decorative blur accents only)
+
+Extended text/UI colors (extracted from the Figma layers themselves —
+these were present in the design but missing from the original brand
+sheet; they are load-bearing, not invented):
+  --color-ink            #222941   Primary dark text (headings, testimonial copy)
+  --color-slate          #5C6378   Secondary/body text
+  --color-border         #E8DED1   Hairline borders, inactive dots, dividers
+
+Tinted icon-chip backgrounds (service card icons only, each at 8% alpha
+of a color already in the design's purple/mauve family — do not expand
+this palette further without checking Figma):
+  rgba(136,87,132,0.08)  rgba(184,125,138,0.08)  rgba(109,158,170,0.08)
+  rgba(139,123,150,0.08) rgba(200,155,123,0.08)  rgba(155,123,157,0.08)
+
+Rule: never introduce a new hue. Ambient/decorative washes (background
+blobs, glows) must be built from --color-primary or --color-deep-purple
+at low alpha (6–16%) — see Section 6, Motion & Background System.
+
+====================================================================
+3. LAYOUT
+====================================================================
+
+Container:
+  max-width: 1280px, centered
+  gutter (side padding): clamp(20px, 6vw, 96px) — scales fluidly from
+    mobile to the 96px gutter seen in the Figma desktop frame
+
+Grid / spacing scale in use: 8, 12, 16, 24, 32, 40, 48, 64, 80, 96px
+  (pick from this scale — don't invent arbitrary spacing values)
+
+Section vertical rhythm: clamp(56px, 8vw, 112px) padding-block, varies
+  slightly per section to match Figma (services is roomier than team/how-
+  it-works)
+
+Border radius system:
+  9999px (pill)  — buttons, avatar images, dots, icon chips
+  24px           — large cards (service cards, privacy card)
+  16px           — medium cards (team cards, step cards, testimonial cards)
+
+Shadows:
+  Card shadow:  0px 4px 3px rgba(0,0,0,0.1), 0px 2px 2px rgba(0,0,0,0.1)
+  Soft shadow:  0px 4px 20px -10px rgba(0,0,0,0.08)  (banners, testimonials)
+
+====================================================================
+4. COMPONENTS
+====================================================================
+
+Buttons:
+  Pill-shaped (radius 9999px), padding ~15px 32px, Rubik 16px.
+  Primary: solid --color-primary fill, white text, deepens to
+    --color-deep-purple on hover with a slight lift (translateY(-2px)).
+  Outline: white fill, 1px --color-deep-purple border/text, fills solid
+    on hover.
+
+Cards (service / team / step / testimonial):
+  White background, card-shadow or soft-shadow, consistent internal
+  padding (32px, or 33px for testimonials to match Figma), consistent
+  icon-chip + heading + body + optional list/link structure. Equal
+  height within a row. Never overlap adjacent cards.
+
+Navigation:
+  Fixed header, transparent over the hero, gains a frosted/blurred
+  cream background (backdrop-filter blur) once the page scrolls past
+  ~60px — see Section 6. Mobile collapses to a full-screen slide-down
+  menu with staggered link entrance.
+
+Icons: sourced as exported SVG/PNG assets directly from Figma
+  (assets/figma/*) — never redrawn by hand. Reuse the existing asset if
+  a new page needs the same glyph; only export a new one if Figma has no
+  equivalent yet.
+
+====================================================================
+5. IMAGERY
+====================================================================
+
+Photography is warm/candid (soft natural light, muted greens), always
+cropped into the organic "blob" mask shape established in the hero
+(assets/figma/hero-photo-blob.png) rather than a hard rectangle or
+circle — this is a deliberate, recurring brand shape, not a one-off.
+
+Decorative line-art (the "chaos → calm" spiral graphic) reinforces the
+brand's therapeutic narrative and should be reused rather than replaced
+with generic iconography if a similar moment is needed on another page.
+
+====================================================================
+6. MOTION & BACKGROUND SYSTEM  (established on the homepage build)
+====================================================================
+
+Libraries:
+  Lenis      — smooth-scroll physics (current stable, loaded via CDN)
+  GSAP 3     — animation engine
+  ScrollTrigger (GSAP plugin) — scroll-driven triggers/scrub
+
+Sync recipe (always use this pairing, never run Lenis on its own
+requestAnimationFrame loop alongside ScrollTrigger — they will drift):
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+Continuous background, not stacked color blocks:
+  The page background is ONE linear-gradient painted on <body>, with
+  color stops placed at the percentage-of-document-height where each
+  section actually falls (measured from the rendered layout, not
+  guessed). Individual <section> elements are transparent. This makes
+  cream/white transitions read as a slow ambient wash rather than hard
+  section seams. When adding a new section to this page, re-measure the
+  boundaries (getBoundingClientRect / scrollHeight) and adjust the
+  gradient stops — don't just append a flat background-color to the new
+  section.
+  Soft radial "ambient light" blobs (--color-primary or --color-deep-
+  purple at 6–16% alpha, blurred) reinforce a few seams (hero→interlude,
+  services, privacy, testimonials) for extra depth. Keep these subtle —
+  they are atmosphere, not decoration you should notice directly.
+
+Heading reveal ("split-word"):
+  Major headings (h1 and section h2s) are split into individual words
+  at runtime, each masked and animated up+in with a staggered
+  power4.out ease as the heading scrolls into view (~85–88% down the
+  viewport). Body paragraphs and small labels are NOT split — this
+  treatment is reserved for primary headings only, per the "motion
+  should have hierarchy" principle.
+
+Card/section reveal:
+  Groups of cards (service/team/step grids) fade + rise together with a
+  ~0.08s stagger; standalone blocks (copy columns, privacy card) fade +
+  rise as a single unit. Trigger point: element top hits 85% of the
+  viewport, animates once, never repeats.
+
+Hero depth:
+  On scroll, the hero's text column, photo, and bottom wave drift at
+  three different speeds (scrub-linked to hero scroll progress) to
+  create parallax depth rather than moving as one flat layer.
+
+Card micro-interaction (desktop, fine pointer only):
+  Service/team/step cards tilt very slightly (±6°) toward the cursor via
+  GSAP quickTo, with perspective set on the parent grid. Disabled
+  entirely on touch/coarse pointers and under prefers-reduced-motion.
+
+Easing philosophy:
+  Entrances: power3.out / power4.out (fast start, soft landing — no
+    bounce, no overshoot).
+  Scrub-linked motion (parallax, scale-ins): ease: 'none' (scrub itself
+    provides the easing via scroll velocity).
+  Hover/tilt: power3.out, short duration (~0.4–0.5s).
+  Never use elastic/bounce easing — it reads as playful, not premium,
+  and doesn't match this brand.
+
+Reduced motion & no-JS fallback (mandatory, three tiers):
+  1. GSAP available + motion allowed → full scroll-driven system above.
+  2. GSAP fails to load (CDN blocked) → JS still runs a plain
+     IntersectionObserver + CSS-transition fallback (documentElement
+     gets a `.no-gsap` class that re-enables the CSS transitions).
+  3. JavaScript disabled entirely → a <noscript> stylesheet forces all
+     `.reveal`/`.reveal-stagger`/`.js-split` content to full opacity
+     with no transform, so nothing is ever permanently invisible.
+  `prefers-reduced-motion: reduce` skips all GSAP scroll animation and
+  the split-word effect; content simply appears in place.

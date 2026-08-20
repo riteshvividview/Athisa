@@ -15,6 +15,26 @@
 
 ---
 
+# Design Source of Truth
+
+* Figma is the single source of truth for visual design. When building a
+  new page, inspect the Figma frame via the Figma MCP before writing code.
+* Do not arbitrarily change brand colors, fonts, or component shapes.
+  `brand book.txt` documents the actual system extracted from Figma —
+  check it first; if a value you need isn't there, pull it from Figma
+  rather than guessing.
+* Use real Figma-exported assets (icons, photos, decorative graphics)
+  instead of redrawing or substituting placeholders. Save new exports
+  into `assets/figma/` with a descriptive filename.
+* Reuse existing components (buttons, cards, nav) instead of inventing
+  new visual variants for the same purpose. If a new page needs a
+  component that already exists on another page, match it exactly.
+* Motion and interaction are the intended way to make a page feel
+  premium — not by redesigning the visual identity. Preserve the Figma
+  design; add depth through the motion system below.
+
+---
+
 # Responsive Design Rules
 
 ## Mobile (Primary)
@@ -249,6 +269,50 @@ Rules:
 * Do not animate every element.
 * Never block user interaction.
 * Respect reduced-motion preferences.
+
+---
+
+# Premium Motion & Continuity Rules
+
+These rules extend the Animation Rules above with the specific system
+established on the homepage (see `brand book.txt` Section 6 for the full
+technical recipe). Apply the same system to new pages rather than
+inventing a different motion language per page.
+
+* Use Lenis for smooth scrolling on every page, synced to the GSAP
+  ticker (`gsap.ticker.add` + `lenis.on('scroll', ScrollTrigger.update)`
+  + `gsap.ticker.lagSmoothing(0)`) — never run Lenis on its own
+  independent rAF loop alongside ScrollTrigger.
+* Prefer scroll-driven animation (ScrollTrigger) over autoplay/timed
+  animation. Motion should respond to where the user is on the page.
+* Avoid generic "fade in everything" treatments. Give motion hierarchy:
+  primary headings get the strongest treatment (split-word reveal),
+  supporting content gets a simple fade+rise, decorative elements get
+  subtle parallax, and minor UI text does not animate at all.
+* Never let a CSS `transition` run on the same property a JS/GSAP
+  animation is actively driving (e.g. `transform`, `opacity`) — the two
+  will fight and read as laggy. Pick one owner per property per state.
+* Avoid the "stack of colored blocks" look. Prefer one continuous
+  background wash (a single gradient sized to the full document, with
+  stops measured from actual section boundaries) over solid
+  per-section background-colors. Section boundaries should read as a
+  gentle blend, not a hard edge — see brand book.txt Section 6.
+* Card/element hover interactions (tilt, lift) are welcome on desktop
+  fine-pointer devices but must be disabled under `(pointer: coarse)`
+  and `prefers-reduced-motion: reduce`.
+* Every animated page must degrade gracefully in three tiers: full
+  motion library available; JS available but the animation CDN failed
+  (plain CSS-transition fallback); JavaScript disabled entirely (a
+  `<noscript>` stylesheet forces all motion-hidden content to full
+  visibility). Content must never be permanently invisible if a script
+  fails to load.
+* Keep decorative ambient effects (background glows, blobs) built from
+  colors already in the brand palette at low alpha — do not introduce
+  new hues for "mood."
+* Use GSAP + ScrollTrigger only where plain CSS transitions/animations
+  genuinely can't do the job (scroll-scrubbed motion, staggered text
+  splitting, cross-element sequencing). Don't add the library for
+  effects a CSS `transition` or `@keyframes` would handle just as well.
 
 ---
 
