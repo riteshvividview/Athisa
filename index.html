@@ -131,48 +131,6 @@
     }
   }
 
-  /* ============ Page transition ============
-     Full-screen "iris wipe": a brand-gradient panel that clip-path
-     circles closed/open around center, with the same droplet glyph used
-     in the hero kicker as the branded loading beat. Base (un-classed)
-     state is fully covering so there's no flash of the raw page before
-     JS runs; site.js adds `is-revealed` on load to shrink it away, and
-     removes it right before navigating to a new page so the covering
-     animation plays first. Plain CSS transitions (no GSAP dependency)
-     so this identical block can run on every page regardless of what
-     else has loaded. */
-  .page-transition {
-    position: fixed;
-    inset: 0;
-    z-index: 3000;
-    pointer-events: none;
-  }
-  .page-transition__panel {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-primary) 55%, var(--color-deep-purple) 100%);
-    clip-path: circle(150% at 50% 50%);
-    transition: clip-path 0.85s cubic-bezier(0.76, 0, 0.24, 1);
-  }
-  .page-transition.is-revealed .page-transition__panel {
-    clip-path: circle(0% at 50% 50%);
-  }
-  .page-transition__mark {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .page-transition__mark svg { width: 56px; height: 65px; display: block; }
-  .page-transition.is-revealed .page-transition__mark {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .page-transition__panel, .page-transition__mark { transition: none !important; }
-  }
-
   /* ============ Eyebrow / kicker ============ */
   .eyebrow {
     font-family: var(--font-body);
@@ -962,15 +920,6 @@
 </head>
 <body>
 
-<div class="page-transition" aria-hidden="true">
-  <div class="page-transition__panel"></div>
-  <div class="page-transition__mark">
-    <svg viewBox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9 1c3 2 5 5 5 8a5 5 0 1 1-10 0c0-3 2-6 5-8Z" fill="#FDF1EE"/>
-    </svg>
-  </div>
-</div>
-
 <noscript>
   <style>
     .reveal, .reveal-stagger > * { opacity: 1 !important; transform: none !important; }
@@ -1415,43 +1364,6 @@
   var hasGsap = !!(window.gsap && window.ScrollTrigger);
   if (hasGsap) { gsap.registerPlugin(ScrollTrigger); }
   else { document.documentElement.classList.add('no-gsap'); }
-
-  /* ---- Page transition: covers on the way out, reveals on arrival.
-     Plain CSS transitions (not GSAP-dependent) so it can't be skipped by
-     a slow CDN script and behaves identically on every page. ---- */
-  (function pageTransition() {
-    var overlay = document.querySelector('.page-transition');
-    if (!overlay) return;
-    var duration = reduceMotion ? 0 : 850;
-
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        overlay.classList.add('is-revealed');
-      });
-    });
-
-    function isInternalNavigableLink(a) {
-      if (!a || !a.getAttribute('href')) return false;
-      if (a.target && a.target !== '_self') return false;
-      if (a.hasAttribute('download')) return false;
-      var url;
-      try { url = new URL(a.href, window.location.href); } catch (e) { return false; }
-      if (url.origin !== window.location.origin) return false;
-      if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
-      if (url.pathname === window.location.pathname && url.hash) return false;
-      return true;
-    }
-
-    document.addEventListener('click', function (e) {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var a = e.target.closest('a');
-      if (!isInternalNavigableLink(a)) return;
-      e.preventDefault();
-      var dest = a.href;
-      overlay.classList.remove('is-revealed');
-      setTimeout(function () { window.location.href = dest; }, duration);
-    });
-  })();
 
   /* ---- Mobile nav ---- */
   var toggle = document.getElementById('menuToggle');

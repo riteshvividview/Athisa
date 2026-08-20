@@ -6,43 +6,6 @@
   if (hasGsap) { gsap.registerPlugin(ScrollTrigger); }
   else { document.documentElement.classList.add('no-gsap'); }
 
-  /* ---- Page transition: covers on the way out, reveals on arrival.
-     Plain CSS transitions (not GSAP-dependent) so it can't be skipped by
-     a slow CDN script and behaves identically on every page. ---- */
-  (function pageTransition() {
-    var overlay = document.querySelector('.page-transition');
-    if (!overlay) return;
-    var duration = reduceMotion ? 0 : 850;
-
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        overlay.classList.add('is-revealed');
-      });
-    });
-
-    function isInternalNavigableLink(a) {
-      if (!a || !a.getAttribute('href')) return false;
-      if (a.target && a.target !== '_self') return false;
-      if (a.hasAttribute('download')) return false;
-      var url;
-      try { url = new URL(a.href, window.location.href); } catch (e) { return false; }
-      if (url.origin !== window.location.origin) return false;
-      if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
-      if (url.pathname === window.location.pathname && url.hash) return false;
-      return true;
-    }
-
-    document.addEventListener('click', function (e) {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var a = e.target.closest('a');
-      if (!isInternalNavigableLink(a)) return;
-      e.preventDefault();
-      var dest = a.href;
-      overlay.classList.remove('is-revealed');
-      setTimeout(function () { window.location.href = dest; }, duration);
-    });
-  })();
-
   /* ---- Mobile nav ---- */
   var toggle = document.getElementById('menuToggle');
   var menu = document.getElementById('mobileMenu');
