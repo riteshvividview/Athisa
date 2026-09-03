@@ -424,37 +424,75 @@
   }
 
   /* ---- Contact form (opt-in via .js-contact-form) ----
-     No backend exists yet — this validates client-side (native HTML5
-     constraints) and swaps in a success state on submit, rather than
-     silently doing nothing or pretending to POST somewhere. Replace the
-     body of the submit handler with a real fetch()/endpoint call once a
-     form-handling service or backend is wired up. */
+     Submits to the Brevo proxy (a small Vercel serverless function that
+     holds the Brevo API key server-side — see brevo-function/api/contact.js).
+     Update BREVO_CONTACT_ENDPOINT below once that function is deployed. */
+  var BREVO_CONTACT_ENDPOINT = 'https://athisa-brevo-function.vercel.app/api/contact';
+
   var contactForm = document.querySelector('.js-contact-form');
   if (contactForm) {
     var formCard = contactForm.closest('.form-card');
     var successEl = formCard ? formCard.querySelector('.form-success') : null;
+    var errorEl = formCard ? formCard.querySelector('.form-error') : null;
+    var submitBtn = contactForm.querySelector('.form-submit');
+
+    function showSuccess() {
+      if (!successEl) return;
+      if (hasGsap && !reduceMotion) {
+        gsap.to(contactForm, {
+          opacity: 0, y: -12, duration: 0.35, ease: 'power2.in',
+          onComplete: function () {
+            contactForm.style.display = 'none';
+            successEl.classList.add('is-active');
+            gsap.fromTo(successEl, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
+          }
+        });
+      } else {
+        contactForm.style.display = 'none';
+        successEl.classList.add('is-active');
+      }
+    }
+
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!contactForm.checkValidity()) {
         contactForm.reportValidity();
         return;
       }
-      if (successEl) {
-        if (hasGsap && !reduceMotion) {
-          gsap.to(contactForm, {
-            opacity: 0, y: -12, duration: 0.35, ease: 'power2.in',
-            onComplete: function () {
-              contactForm.style.display = 'none';
-              successEl.classList.add('is-active');
-              gsap.fromTo(successEl, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
-            }
-          });
-        } else {
-          contactForm.style.display = 'none';
-          successEl.classList.add('is-active');
-        }
-      }
-      contactForm.reset();
+
+      if (errorEl) errorEl.style.display = 'none';
+      if (submitBtn) submitBtn.disabled = true;
+
+      var formData = new FormData(contactForm);
+      var payload = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        subject: formData.get('subject'),
+        message: formData.get('message'),
+        company: formData.get('company') // honeypot
+      };
+
+      fetch(BREVO_CONTACT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('Request failed: ' + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          if (!data || !data.ok) throw new Error('Send failed');
+          contactForm.reset();
+          showSuccess();
+        })
+        .catch(function () {
+          if (errorEl) errorEl.style.display = 'block';
+        })
+        .finally(function () {
+          if (submitBtn) submitBtn.disabled = false;
+        });
     });
   }
 
