@@ -436,6 +436,14 @@
     var errorEl = formCard ? formCard.querySelector('.form-error') : null;
     var submitBtn = contactForm.querySelector('.form-submit');
 
+    function fireConfetti() {
+      if (typeof confetti !== 'function' || reduceMotion) return;
+      var colors = ['#885784', '#602B7A', '#FDF1EE', '#FFFFFF'];
+      confetti({ particleCount: 90, spread: 70, startVelocity: 38, origin: { y: 0.6 }, colors: colors });
+      confetti({ particleCount: 60, angle: 60, spread: 60, origin: { x: 0, y: 0.7 }, colors: colors });
+      confetti({ particleCount: 60, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors: colors });
+    }
+
     function showSuccess() {
       if (!successEl) return;
       if (hasGsap && !reduceMotion) {
@@ -444,12 +452,13 @@
           onComplete: function () {
             contactForm.style.display = 'none';
             successEl.classList.add('is-active');
-            gsap.fromTo(successEl, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
+            gsap.fromTo(successEl, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', onComplete: fireConfetti });
           }
         });
       } else {
         contactForm.style.display = 'none';
         successEl.classList.add('is-active');
+        fireConfetti();
       }
     }
 
