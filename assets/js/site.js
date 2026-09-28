@@ -181,16 +181,20 @@
     var heroVisual = document.querySelector('.hero__visual');
     var heroWave = document.querySelector('.hero__wave');
     if (heroContent && heroVisual) {
-      gsap.to(heroContent, {
-        yPercent: 14,
-        ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
-      });
-      gsap.to(heroVisual, {
-        yPercent: -8,
-        scale: 1.04,
-        ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
+      /* Content/photo counter-drift only when they sit side by side (>=860px).
+         When stacked on mobile it pushed the text down over the photo. */
+      gsap.matchMedia().add('(min-width: 860px)', function () {
+        gsap.to(heroContent, {
+          yPercent: 14,
+          ease: 'none',
+          scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
+        });
+        gsap.to(heroVisual, {
+          yPercent: -8,
+          scale: 1.04,
+          ease: 'none',
+          scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
+        });
       });
       if (heroWave) {
         gsap.to(heroWave, {

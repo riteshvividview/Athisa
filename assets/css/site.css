@@ -195,9 +195,7 @@
     transition: background-color 0.5s var(--ease), backdrop-filter 0.5s var(--ease), box-shadow 0.5s var(--ease);
   }
   .site-header.is-scrolled {
-    background: rgba(253, 241, 238, 0.72);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: var(--color-cream);
     box-shadow: 0 1px 0 0 rgba(96,43,122,0.08);
   }
 
@@ -419,7 +417,7 @@
     border-radius: 4px;
     margin: 0 auto 32px;
   }
-  .space-block__graphic { max-width: 260px; margin-inline: auto; opacity: 0.9; }
+  .space-block__graphic { width: 100%; max-width: 260px; height: auto; margin-inline: auto; opacity: 0.9; }
 
   .approach-block__intro { max-width: 480px; margin-bottom: 40px; }
   .approach-block .lede { margin-top: 20px; }

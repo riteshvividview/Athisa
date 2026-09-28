@@ -201,9 +201,7 @@
     transition: background-color 0.5s var(--ease), backdrop-filter 0.5s var(--ease), box-shadow 0.5s var(--ease);
   }
   .site-header.is-scrolled {
-    background: rgba(253, 241, 238, 0.72);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: var(--color-cream);
     box-shadow: 0 1px 0 0 rgba(96,43,122,0.08);
   }
 
@@ -481,7 +479,7 @@
     border-radius: 4px;
     margin: 0 auto 32px;
   }
-  .space-block__graphic { max-width: 360px; margin-inline: auto; mix-blend-mode: multiply; }
+  .space-block__graphic { display: block; width: 100%; max-width: 360px; height: auto; margin-inline: auto; mix-blend-mode: multiply; }
 
   .approach-block__intro { max-width: 480px; margin-bottom: 40px; }
   .approach-block .lede { margin-top: 20px; }
@@ -1609,16 +1607,20 @@
     var heroVisual = document.querySelector('.hero__visual');
     var heroWave = document.querySelector('.hero__wave');
     if (heroContent && heroVisual) {
-      gsap.to(heroContent, {
-        yPercent: 14,
-        ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
-      });
-      gsap.to(heroVisual, {
-        yPercent: -8,
-        scale: 1.04,
-        ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
+      /* Content/photo counter-drift only when they sit side by side (>=860px).
+         When stacked on mobile it pushed the text down over the photo. */
+      gsap.matchMedia().add('(min-width: 860px)', function () {
+        gsap.to(heroContent, {
+          yPercent: 14,
+          ease: 'none',
+          scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
+        });
+        gsap.to(heroVisual, {
+          yPercent: -8,
+          scale: 1.04,
+          ease: 'none',
+          scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
+        });
       });
       if (heroWave) {
         gsap.to(heroWave, {
@@ -1669,14 +1671,18 @@
     var servicesBadge = document.querySelector('.services__banner');
     var servicesHeading = document.querySelector('.services__head');
     if (servicesBadge && servicesHeading) {
-      gsap.fromTo(servicesBadge,
-        { x: -36 },
-        { x: 36, ease: 'none', scrollTrigger: { trigger: '.services', start: 'top bottom', end: 'top 20%', scrub: 0.7 } }
-      );
-      gsap.fromTo(servicesHeading,
-        { x: 24 },
-        { x: -24, ease: 'none', scrollTrigger: { trigger: '.services', start: 'top bottom', end: 'top 20%', scrub: 0.7 } }
-      );
+      /* Desktop only: on narrow screens the sideways drift pushed the
+         heading off-center and clipped it at the viewport edge. */
+      gsap.matchMedia().add('(min-width: 860px)', function () {
+        gsap.fromTo(servicesBadge,
+          { x: -36 },
+          { x: 36, ease: 'none', scrollTrigger: { trigger: '.services', start: 'top bottom', end: 'top 20%', scrub: 0.7 } }
+        );
+        gsap.fromTo(servicesHeading,
+          { x: 24 },
+          { x: -24, ease: 'none', scrollTrigger: { trigger: '.services', start: 'top bottom', end: 'top 20%', scrub: 0.7 } }
+        );
+      });
     }
 
     /* ---- "A Space to Be" decorative graphic: soft parallax + scale-in ---- */
